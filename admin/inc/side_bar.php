@@ -67,13 +67,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="post.php?do=Add" class="nav-link">
+                <a href="mentors.php?action=Add" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Add New Mentor</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="post.php?do=Manage" class="nav-link">
+                <a href="mentors.php?action=Manage" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>All Mentors</p>
                 </a>

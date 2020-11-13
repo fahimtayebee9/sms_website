@@ -230,7 +230,7 @@
             <!-- All Category Start -->
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Manage All Category</h3>
+                <h3 class="card-title">Manage All Departments</h3>
 
                 <div class="card-tools">
                   
@@ -315,7 +315,7 @@
                                 
                                 <td class="project-actions">
                                     <a class="btn btn-outline-secondary btn-sm" href="category.php?edit=<?php echo $dept_id; ?>">
-                                        <i class="fas fa-pencil-alt">
+                                        <i class="fas fa-eye">
                                         </i>
                                     </a>
                                     <a class="btn btn-outline-primary btn-sm" href="category.php?edit=<?php echo $dept_id; ?>">
@@ -328,29 +328,8 @@
                                     </a>
                                 </td>
                             </tr>
-<!-- Delete Modal -->
-<div class="modal fade" id="delete<?php echo $cat_id; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Do you Confirm to delete this category?</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="delete-option text-center">
-          <ul>
-            <li><a href="category.php?delete=<?php echo $cat_id; ?>" class="btn btn-danger">Delete</a></li>
-            <li><button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-                      <?php  }
+                      <?php  
+                        }
                       ?>
 
                         
