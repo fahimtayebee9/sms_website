@@ -865,7 +865,7 @@
   <?php include "inc/footer.php"; ?>
 
   <!-- Control Sidebar -->
-  <?php include "inc/sidebar.php"; ?>
+  <?php include "inc/controlbar.php"; ?>
   <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->

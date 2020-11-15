@@ -1,11 +1,11 @@
 <?php include "inc/header.php"; ?>
 
   <!-- Navbar -->
-  <?php include "inc/topbar.php"; ?>
+  <?php include "inc/top_nav.php"; ?>
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-  <?php include "inc/menu.php"; ?>
+  <?php include "inc/side_bar.php"; ?>
 
 
 
@@ -45,12 +45,12 @@
   <!-- /.content-wrapper -->
 
 
-  <!-- Footer -->
-  <?php include "inc/footer.php"; ?>
+    <!-- Footer -->
+    <?php include "inc/footer.php"; ?>
 
-  <!-- Control Sidebar -->
-  <?php include "inc/sidebar.php"; ?>
-  <!-- /.control-sidebar -->
+    <!-- Control Sidebar -->
+    <?php include "inc/controlbar.php"; ?>
+    <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
 <?php include "inc/script.php"; ?>

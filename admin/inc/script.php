@@ -33,6 +33,10 @@
 <script src="plugins/jquery-mapael/maps/usa_states.min.js"></script>
 <!-- Summernote -->
 <script src="plugins/summernote/summernote-bs4.min.js"></script>
+<!-- DATATABLES -->
+<script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
 
 <!-- overlayScrollbars -->
 <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
@@ -48,6 +52,21 @@
 
 
   <script>
+    // DEPT Add SELECT
+    $(function () {
+      $('#select2adddept').select2()
+
+      //Initialize Select2 Elements
+      $('#select2adddept').select2({
+        theme: 'bootstrap4',
+        placeholder: 'Please Select the Parent Department',
+        tags: true,
+        allowClear: true,
+        closeOnSelect: true
+      })
+    })
+
+    // MENTOR ADD DEPT
     $(function () {
       $('#select2dept').select2()
 
@@ -58,11 +77,84 @@
         tags: true,
         allowClear: true,
         closeOnSelect: true
-        
+      })
+    })
+
+    // MENTOR ADD SKILLS
+    $(function () {
+      $('#select2skills').select2()
+
+      //Initialize Select2 Elements
+      $('#select2skills').select2({
+        theme: 'bootstrap4',
+        placeholder: 'Please Select Skills',
+        tags: true,
+        allowClear: true,
+        closeOnSelect: true
       })
     })
   </script>
 
+    <!-- IMAGE SELECT ACTION -->
+  <script>
+    function getfileinfo(){
+      var file_name = document.getElementById('profile_image').files[0].name;
+      var sizeKb = Math.ceil(document.getElementById('profile_image').files[0].size / 1024);
+      var sizeMb = document.getElementById('profile_image').files[0].size / (1024 * 1024);
+      var file_type = document.getElementById('profile_image').files[0].type;
+      document.getElementById('preview_block').style.display = "block";
+      document.getElementById('preview_block').style.maxHeight = "200px";
+      document.getElementById('file_name').innerHTML = file_name;
+      document.getElementById('file_size').innerHTML = sizeMb.toFixed(3) + " Mb";
+      document.getElementById('choose_file').innerHTML = file_name;
+      var valid_types = ["jpg", "jpeg", "png", "gif", "Jpg", "Jpeg", "Png", "Gif" , "JPG", "JPEG", "PNG", "GIF"];
+      var type_check = valid_types.includes(file_type.split('/')[1]);
+
+      if(type_check){
+        document.getElementById('preview_file').src = window.URL.createObjectURL(document.getElementById('profile_image').files[0]);
+        document.getElementById('file_type').innerHTML = file_type.split('/')[1] + "";
+        document.getElementById('validate').innerHTML  = "";
+      }
+      else{
+        document.getElementById('preview_file').src = "img/errors/file_icon.png";
+        document.getElementById('file_type').innerHTML = file_type.split('/')[1];
+        document.getElementById('validate').innerHTML  = "(not valid file)";
+      }
+      
+    }
+    
+    function resetPreview(){
+      document.getElementById('preview_block').style.display = "none";
+      document.getElementById('file_name').innerHTML = "File Name : ";
+      document.getElementById('file_size').innerHTML = "File Size : ";
+      document.getElementById('preview_file').src = "";
+      document.getElementById('profile_image').value = null;
+      document.getElementById('choose_file').innerHTML = "Choose File";
+
+    }
+
+  </script>
+
+
+  <!-- TEXT AREA -->
+  <script>
+    $(function () {
+      $('.textarea').summernote()
+    })
+  </script>
+
+    <!-- FORM VALIDATION MENTOR ADD -->
+    <script>
+      function validateEmail(){
+        if(document.getElementById('email').value.includes('@gmail.com') || document.getElementById('email').value.includes('@yahoo.com')){
+          document.getElementById('email').classList.remove('is-invalid');
+          document.getElementById('email').classList.add('is-valid');
+        }
+        else if(!document.getElementById('email').value.includes('@gmail.com') || !document.getElementById('email').value.includes('@yahoo.com')){
+          document.getElementById('email').classList.add('is-invalid');
+        }
+      }
+    </script>
 
   <!-- <script>
     function getSubCategory(){

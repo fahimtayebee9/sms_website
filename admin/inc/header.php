@@ -6,7 +6,7 @@
 
   // To check the User if Session Data found
   if ( empty( $_SESSION['email'] ) || empty( $_SESSION['password'] ) ){
-    // header("Location: index.php");
+    header("Location: index.php");
   }
   
 ?>
@@ -60,6 +60,16 @@
   <!-- summernote -->
   <link rel="stylesheet" href="plugins/summernote/summernote-bs4.css">
 
+  <!-- CUSTOM STYLE -->
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <style>
+    .table-img{
+      height: 50px;
+      width: 50px;
+      border-radius: 50%;
+    }
+  </style>
 
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">

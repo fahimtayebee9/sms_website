@@ -45,7 +45,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="departments.php" class="nav-link">
+                <a href="departments.php" class="nav-link" onclick="onSelectMenu()">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Manage Departments</p>
                 </a>
@@ -58,7 +58,7 @@
           <!-- Manage Users Nav Start -->
           <li class="nav-item">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-mail-bulk"></i>
+              <i class="nav-icon fas fa-chalkboard-teacher"></i>
               <p>
                 Manage Mentors
                 <i class="fas fa-angle-left right"></i>
@@ -67,13 +67,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="mentors.php?action=Add" class="nav-link">
+                <a href="mentors.php?action=Add" class="nav-link" onclick="onSelectMenu()">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Add New Mentor</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="mentors.php?action=Manage" class="nav-link">
+                <a href="mentors.php?action=Manage" class="nav-link" onclick="onSelectMenu()">
                   <i class="far fa-circle nav-icon"></i>
                   <p>All Mentors</p>
                 </a>
@@ -86,7 +86,7 @@
           <!-- Manage Users Nav Start -->
           <li class="nav-item">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-comments"></i>
+              <i class="nav-icon fas fa-user-graduate"></i>
               <p>
                 All Students
                 <i class="fas fa-angle-left right"></i>
@@ -135,22 +135,21 @@
           <!-- Manage Visitors Nav Start -->
           <li class="nav-item">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-user-clock"></i>
+              <i class="nav-icon fas fa-book-open"></i>
               <p>
                 Manage Courses
                 <i class="fas fa-angle-left right"></i>
-                <!-- <span class="badge badge-info right">6</span> -->
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="visitor.php?do=Manage" class="nav-link">
+                <a href="courses.php?action=Manage" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>All Courses</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="visitor.php?do=Manage" class="nav-link">
+                <a href="courses.php?action=Add" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Add New Course</p>
                 </a>

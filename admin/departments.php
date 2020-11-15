@@ -62,7 +62,7 @@
                   </div>
                   <div class="form-group">
                     <label>Parent Department</label>
-                    <select class="form-control w-100" id="select2dept" name="sub_Dept" required multiple>
+                    <select class="form-control w-100" id="select2adddept" name="sub_Dept" required multiple>
                       <option value="0">No Parent Department</option>
                       <?php
                         $getSubSQL = "SELECT * FROM departments WHERE sub_Dept = 0";
