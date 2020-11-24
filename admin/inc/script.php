@@ -107,8 +107,8 @@
       document.getElementById('file_name').innerHTML = file_name;
       document.getElementById('file_size').innerHTML = sizeMb.toFixed(3) + " Mb";
       document.getElementById('choose_file').innerHTML = file_name;
-      var valid_types = ["jpg", "jpeg", "png", "gif", "Jpg", "Jpeg", "Png", "Gif" , "JPG", "JPEG", "PNG", "GIF"];
-      var type_check = valid_types.includes(file_type.split('/')[1]);
+      var valid_types = ["jpg", "jpeg", "png", "gif"];
+      var type_check = valid_types.includes(file_type.split('/')[1].toLowerCase());
 
       if(type_check){
         document.getElementById('preview_file').src = window.URL.createObjectURL(document.getElementById('profile_image').files[0]);
@@ -116,7 +116,7 @@
         document.getElementById('validate').innerHTML  = "";
       }
       else{
-        document.getElementById('preview_file').src = "img/errors/file_icon.png";
+        $("#preview_file").attr("src", "https://webstockreview.net/images/google-docs-icon-png-3.png");
         document.getElementById('file_type').innerHTML = file_type.split('/')[1];
         document.getElementById('validate').innerHTML  = "(not valid file)";
       }
@@ -156,32 +156,50 @@
       }
     </script>
 
-  <!-- <script>
-    function getSubCategory(){
-      var cat_id = document.getElementById(event.target.id).value;
-      var xhttp = new XMLHttpRequest();
-      xhttp.open('POST', 'controllers/category_controller.php', true);
-      xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-      xhttp.send('cat_id='+ cat_id);
-      xhttp.onreadystatechange = function (){
-          if(this.readyState == 4 && this.status == 200){
-              if(this.responseText != ""){
-                  if(this.responseText == "0"){
-                    document.getElementById('sub_id').disabled = true;
-                    document.getElementById('sub_id').innerHTML = "<option value='0'>Please select the category</option>";
-                  }
-                  else{
-                    document.getElementById('sub_id').disabled = "";
-                    document.getElementById('sub_id').innerHTML = this.responseText;
-                  }
-              }else{
-                  document.getElementById('sub_id').innerHTML = "";
-                  document.getElementById('sub_id').disabled = true;
-              }
-          }	
+    <script>
+      // Check 
+      var Toast = Swal.mixin({
+        toast: true,
+        // position: 'top-end',
+        showConfirmButton: false,
+        timer: 3500
+      });
+
+      <?php
+        if(isset($_SESSION['img_err'])){
+              ?>
+                Toast.fire({
+                  position: 'top-end',
+                  icon: 'error',
+                  title: '<?=$_SESSION['img_err']?>',
+                  showConfirmButton: false,
+                  timer: 3500
+                })
+              <?php
+          unset($_SESSION['img_err']);
+        }
+
+        if(isset($_SESSION['img_name'])){
+          ?>
+            Toast.fire({
+              position: 'top-end',
+              icon: 'error',
+              title: '<?=$_SESSION['img_name']?>',
+              showConfirmButton: false,
+              timer: 3500
+            })
+          <?php
+          unset($_SESSION['img_name']);
+        }
+      ?>
+    </script>
+
+    <!-- TAKE ACTION -->
+    <script>
+      function takeaction(){
+        $('.nav-link').classList.add('active');
       }
-    }
-  </script> -->
+    </script>
 
   <script>
       var Toast = Swal.mixin({

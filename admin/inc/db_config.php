@@ -8,10 +8,11 @@
 
     if(!$db){
         ?>
-            <div class="alert alert-danger">
+            <div class="alert">
                 <?=mysqli_error($db)?>
             </div>
         <?php
     }
+
 
 ?>

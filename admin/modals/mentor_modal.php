@@ -1,26 +1,37 @@
+
 <div id="quickview-wrapper">
     <?php
-        $mentorSql = "SELECT * FROM mentors INNER JOIN users ON users.id = mentors.user_FK INNER JOIN departments ON mentors.mentor_dept = departments.dept_id";
-        $res_mentor = mysqli_query($db,$mentorSql);
-        while($rowMentor = mysqli_fetch_assoc($res_mentor)){
-                $mentor_name = $rowMentor['name'];
-                $mentor_image = $rowMentor['image'];
-                $mentor_status = $rowMentor['status'];
-                $mentor_id = $rowMentor['id'];
-                $mentor_email = $rowMentor['email'];
-                $mentor_phone = $rowMentor['phone'];
-                $mentor_address = $rowMentor['address'];
-                $mentor_skills = $rowMentor['skills'];
-                $mentor_dept   = $rowMentor['mentor_dept'];
-                $mentor_desc   = $rowMentor['mentor_desc'];
-                $mentor_link   = $rowMentor['portfolio_link'];
-                $mentor_role   = $rowMentor['role'];
-                $mentor_joinDate = $rowMentor['join_date'];
-                $dept_title      = $rowMentor['dept_title'];
+        $table = "mentors";
+        $data = array(
+            'order_by' => 'mentor_id DESC'
+        );
+        $allusers = $db->select($table,$data);
+
+        
+        foreach($allusers as $mentor){
+                $skills_list = explode(',', $mentor->skills );
+
+                $table = "users";
+                $dataUser = array(
+                    'where' => array(
+                        'id' => $mentor->user_FK
+                    ),
+                    'return_type' => 'single'
+                );
+                $userInfo =  $db->select($table,$dataUser);
+
+                $table = "departments";
+                $datadept = array(
+                    'where' => array(
+                        'dept_id' => $mentor->mentor_dept
+                    ),
+                    'return_type' => 'single'
+                );
+                $dept_info =  $db->select($table,$datadept);
             ?>
             
                 <!-- Modal -->
-                <div class="modal fade" id="productmodal<?=$mentor_id?>" tabindex="-1" role="dialog">
+                <div class="modal fade" id="productmodal<?=$userInfo->id?>" tabindex="-1" role="dialog">
                     <div class="modal-dialog modal-lg modal__container" role="document">
                         <div class="modal-content" >
                             <div class="modal-header modal__header justify-content-between">
@@ -29,7 +40,7 @@
                             </div>
                             <div class="modal-body">
                                 <div class="text-center w-25 m-auto pb-3">
-                                    <img src="img/users/<?=$mentor_image?>" width="180px" style="border-radius:50%;" alt="product image">
+                                    <img src="img/users/<?=$userInfo->image?>" width="180px" style="border-radius:50%;" alt="product image">
                                 </div>
 
                                 <div class="modal-product">
@@ -40,32 +51,45 @@
                                                     <tr>
                                                         <td class="font-weight-bold">Name</td>
                                                         <td class="font-weight-bold pr-1 pl-1"> : </td>
-                                                        <td ><?=$mentor_name?></td>
+                                                        <td ><?=$userInfo->name?></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="font-weight-bold">Email</td>
                                                         <td class="font-weight-bold pr-1 pl-1"> : </td>
-                                                        <td ><?=$mentor_email?></td>
+                                                        <td ><?=$userInfo->email?></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="font-weight-bold">Phone</td>
                                                         <td class="font-weight-bold pr-1 pl-1"> : </td>
-                                                        <td ><?=$mentor_phone?></td>
+                                                        <td ><?=$userInfo->phone?></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="font-weight-bold">Address</td>
                                                         <td class="font-weight-bold pr-1 pl-1"> : </td>
-                                                        <td ><?=$mentor_address?></td>
+                                                        <td ><?=$userInfo->address?></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="font-weight-bold">Department</td>
                                                         <td class="font-weight-bold pr-1 pl-1"> : </td>
-                                                        <td ><?=$dept_title?></td>
+                                                        <td >
+                                                            <?php
+                                                                $table = "departments";
+                                                                $data = array(
+                                                                    'where' => array(
+                                                                        'dept_id' => $mentor->mentor_dept
+                                                                    ),
+                                                                    'return_type' => 'single'
+                                                                );
+                                                                
+                                                                $deptInfo = $db->select($table,$data);
+                                                                echo $deptInfo->dept_title;
+                                                            ?>
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="font-weight-bold">Join Date</td>
                                                         <td class="font-weight-bold pr-1 pl-1"> : </td>
-                                                        <td ><?=date("d M, Y", strtotime($mentor_joinDate))?></td>
+                                                        <td ><?=date("d M, Y", strtotime($userInfo->join_date))?></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -76,22 +100,26 @@
                                                     <tr>
                                                         <td class="font-weight-bold">Description</td>
                                                         <td class="font-weight-bold pr-1 pl-1"> : </td>
-                                                        <td ><?=$mentor_desc?></td>
+                                                        <td ><?=$mentor->mentor_desc?></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="font-weight-bold">Skills</td>
                                                         <td class="font-weight-bold pr-1 pl-1"> : </td>
                                                         <td >
                                                             <?php
-                                                                $skills_list = explode(',',$mentor_skills);
                                                                 foreach($skills_list as $skill){
-                                                                    $getSkill = "SELECT * FROM skills WHERE sk_id = $skill";
-                                                                    $resSk    = mysqli_query($db,$getSkill);
-                                                                    while($rowSk = mysqli_fetch_assoc($resSk)){
+                                                                    $table = "skills";
+                                                                    $data = array(
+                                                                        'where' => array(
+                                                                            'sk_id' => $skill
+                                                                        ),
+                                                                        'return_type' => 'single'
+                                                                    );
+                                                                    
+                                                                    $skillsInfo = $db->select($table,$data);
                                                                         ?>
-                                                                            <span class="badge badge-secondary"><?=$rowSk['sk_title']?></span>
+                                                                            <span class="badge badge-secondary"><?=$skillsInfo->sk_title?></span>
                                                                         <?php
-                                                                    }
                                                                 }
                                                             ?>
                                                         </td>
@@ -99,14 +127,14 @@
                                                     <tr>
                                                         <td class="font-weight-bold">Portfolio Link</td>
                                                         <td class="font-weight-bold pr-1 pl-1"> : </td>
-                                                        <td ><a href="http://<?=$mentor_link?>"><?=$mentor_link?></a></td>
+                                                        <td ><a href="http://<?=$mentor->portfolio_link?>"><?=$mentor->portfolio_link?></a></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="font-weight-bold">Role</td>
                                                         <td class="font-weight-bold pr-1 pl-1"> : </td>
                                                         <td >
                                                             <?php
-                                                                if($mentor_status == 1){
+                                                                if($userInfo->status == 1){
                                                                     ?>
                                                                         <span class="badge badge-info">Mentor</span>
                                                                     <?php
@@ -124,7 +152,7 @@
                                                         <td class="font-weight-bold pr-1 pl-1"> : </td>
                                                         <td >
                                                             <?php
-                                                                if($mentor_status == 1){
+                                                                if($userInfo->status == 1){
                                                                     ?>
                                                                         <span class="badge badge-success">Active</span>
                                                                     <?php
@@ -147,8 +175,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer text-center">
-                                <a class="btn btn-outline-info" href="mentors.php?action=Edit&edit_id=<?=$mentor_id?>"><i class="fas fa-pencil-alt pr-2"></i> Edit</a>
-                                <a class="btn btn-outline-danger" href="mentors.php?action=Edit&edit_id=<?=$mentor_id?>"><i class="fas fa-trash-alt pr-2"></i> Delete</a>
+                                <a class="btn btn-outline-info" href="mentors.php?action=Edit&edit_id=<?=$userInfo->id?>"><i class="fas fa-pencil-alt pr-2"></i> Edit</a>
+                                <a class="btn btn-outline-danger" href="mentors.php?action=Edit&edit_id=<?=$userInfo->id?>"><i class="fas fa-trash-alt pr-2"></i> Delete</a>
                             </div>
                         </div>
                     </div>

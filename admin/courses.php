@@ -48,7 +48,7 @@
                                 <div class="col-lg-12">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h3 class="card-title">Responsive Hover Table</h3>
+                                            <h3 class="card-title">All Courses</h3>
 
                                             <div class="card-tools">
                                                 <div class="input-group input-group-sm" style="width: 150px;">
@@ -64,15 +64,15 @@
                                             <table class="table table-hover text-nowrap">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID</th>
-                                                        <th>Title</th>
-                                                        <th>Mentor</th>
-                                                        <th>Duration</th>
-                                                        <th>Class Time (day)</th>
-                                                        <th>Class Start Date</th>
-                                                        <th>Course Fee</th>
-                                                        <th>Class Status (online/offline)</th>
-                                                        <th>Action</th>
+                                                        <th width="5%">ID</th>
+                                                        <th width="15%">Title</th>
+                                                        <th width="10%">Mentor</th>
+                                                        <th width="5%">Duration</th>
+                                                        <th width="10%">Class Time (day)</th>
+                                                        <th width="15%">Class Start Date</th>
+                                                        <th width="10%">Course Fee</th>
+                                                        <th width="10%">Class Status <br> (online/offline)</th>
+                                                        <th width="20%">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -143,7 +143,18 @@
                                                                         ?>
                                                                     </td>
                                                                     <td>
-
+                                                                        <a class="btn btn-outline-secondary btn-sm" href="courses.php?action=View&view_id=<?=$rowCrs['crs_id']?>">
+                                                                            <i class="fas fa-eye">
+                                                                            </i>
+                                                                        </a>
+                                                                        <a class="btn btn-outline-primary btn-sm" href="category.php?edit=<?php echo $dept_id; ?>">
+                                                                            <i class="fas fa-pencil-alt">
+                                                                            </i>
+                                                                        </a>
+                                                                        <a class="btn btn-outline-danger btn-sm" href="#" data-toggle="modal" data-target="#delete<?php echo $dept_id; ?>">
+                                                                            <i class="fas fa-trash">
+                                                                            </i>
+                                                                        </a>
                                                                     </td>
                                                                 </tr>
                                                             <?php
@@ -239,7 +250,48 @@
             <?php
         }
         else if($action == "View"){
+            if(isset($_GET['view_id'])){
+                $view_id = $_GET['view_id'];
+                $viewSql = "SELECT * FROM courses INNER JOIN mentors ON courses.mentor_FK = mentors.mentor_id INNER JOIN curriculams ON courses.curriculam_id = curriculams.cur_id WHERE courses.crs_id = $view_id";
+                $resView = mysqli_query($db,$viewSql);
+                while($rowCrsData = mysqli_fetch_assoc($resView)){
+                    ?>
+                        <!-- Content Wrapper. Contains page content -->
+                        <div class="content-wrapper">
+                            <!-- Content Header (Page header) -->
+                            <div class="content-header">
+                                <div class="container-fluid">
+                                    <div class="row mb-2">
+                                        <div class="col-sm-6">
+                                            <h1 class="m-0 text-dark">Manage Courses</h1>
+                                        </div><!-- /.col -->
+                                        <div class="col-sm-6">
+                                            <ol class="breadcrumb float-sm-right">
+                                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                            <li class="breadcrumb-item active">Add New Course</li>
+                                            </ol>
+                                        </div><!-- /.col -->
+                                    </div><!-- /.row -->
+                                </div><!-- /.container-fluid -->
+                            </div>
+                            <!-- /.content-header -->
 
+                            <!-- Main content -->
+                            <section class="content">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <!-- /.content -->
+                        </div>
+                        <!-- /.content-wrapper -->
+                    <?php
+                }
+            }
         }
         else if($action == "Insert"){
 

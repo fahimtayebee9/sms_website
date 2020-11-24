@@ -1,12 +1,14 @@
 <?php
-  include "inc/db_config.php";
+  // include "inc/db_config.php";
+  include "controllers/Database.php";
   ob_start();
-  
   session_start();
+
+  $db = new Database();
 
   // To check the User if Session Data found
   if ( empty( $_SESSION['email'] ) || empty( $_SESSION['password'] ) ){
-    header("Location: index.php");
+    // header("Location: index.php");
   }
   
 ?>
