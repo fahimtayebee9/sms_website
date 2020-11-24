@@ -256,7 +256,7 @@
                                         </div>
                                         <!-- /.card-header -->
                                         <!-- form start -->
-                                        <form role="form" action="mentors.php?action=Insert" method="POST" enctype="multipart/form-data">
+                                        <form role="form" action="controllers/MentorController.php" method="POST" enctype="multipart/form-data">
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-md-6">
@@ -329,13 +329,19 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="exampleInputPassword1">Department</label>
-                                                            <select name="department" id="select2dept" class="form-control">
+                                                            <select name="department" id="select2dept" class="form-control" multiple="off">
+                                                                <option value="0">Please Select Department</option>
                                                                 <?php
-                                                                    $deptSql = "SELECT * FROM departments WHERE dept_status = 1";
-                                                                    $resDept = mysqli_query($db,$deptSql);
-                                                                    while($rowDept = mysqli_fetch_assoc($resDept)){
+                                                                    $table_dept = 'departments';
+                                                                    $data_dept  = array(
+                                                                        'where' => array(
+                                                                            'dept_status' => 1
+                                                                        )
+                                                                    );
+                                                                    $dept_list = $db->select($table_dept, $data_dept);
+                                                                    foreach($dept_list as $dept){
                                                                         ?>
-                                                                            <option value="<?=$rowDept['dept_id']?>"><?=$rowDept['dept_title']?></option>
+                                                                            <option value="<?=$dept->dept_id?>"><?=$dept->dept_title?></option>
                                                                         <?php
                                                                     }
                                                                 ?>
@@ -346,19 +352,45 @@
                                                             <label for="exampleInputPassword1">Skills</label>
                                                             <select name="skills[]" id="select2skills" class="form-control" multiple>
                                                                 <?php
-                                                                    $skillSql = "SELECT * FROM skills WHERE sk_status = 1";
-                                                                    $resskill = mysqli_query($db,$skillSql);
-                                                                    while($rowskill = mysqli_fetch_assoc($resskill)){
+                                                                    $table_sk = 'skills';
+                                                                    $data_sk  = array(
+                                                                        'where' => array(
+                                                                            'sk_status' => 1
+                                                                        )
+                                                                    );
+                                                                    $skills_list = $db->select($table_sk, $data_sk);
+                                                                    foreach($skills_list as $sk){
                                                                         ?>
-                                                                            <option value="<?=$rowskill['sk_id']?>"><?=$rowskill['sk_title']?></option>
+                                                                            <option value="<?=$sk->sk_id?>"><?=$sk->sk_title?></option>
                                                                         <?php
                                                                     }
                                                                 ?>
                                                             </select>
                                                         </div>
+
+                                                        <div class="form-group">
+                                                            <label for="">Assign Course</label>
+                                                            <select name="crs_taking[]" id="select2crs" class="form-control" multiple>
+                                                                <option value="0">Please Select Course</option>
+                                                                <?php
+                                                                    $table_crs = 'courses';
+                                                                    $data_crs  = array(
+                                                                        'order_by' => 'crs_id DESC'
+                                                                    );
+
+                                                                    $crs_list = $db->select($table_crs, $data_crs);
+                                                                    foreach($crs_list as $crs){
+                                                                        ?>
+                                                                            <option value="<?=$crs->crs_id?>">( <?=$crs->crs_customID?> )<?=$crs->crs_title?></option>
+                                                                        <?php
+                                                                    }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+
                                                         <div class="form-group">
                                                             <label for="exampleInputPassword1">Portfolio Link</label>
-                                                            <input type="text" class="form-control" id="exampleInputPassword1" name="link" placeholder="Password">
+                                                            <input type="text" class="form-control" id="" name="link" placeholder="Password">
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="exampleInputPassword1">Status</label>
@@ -383,6 +415,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3 m-auto">
+                                                        <input type="hidden" name="action" value="add">
                                                         <button type="submit" class="btn w-100 btn-primary">Submit</button>
                                                     </div>
                                                 </div>
@@ -395,146 +428,62 @@
                                 </div>
                             <?php
                         }
-                        else if($action == "Insert"){
-                            if($_SERVER['REQUEST_METHOD'] == "POST"){
-                                $fullname    = $_POST['fullname'];
-                                $email       = $_POST['email'];
-                                $password    = $_POST['password'];
-                                $repassword  = $_POST['repassword'];
-                                $mentor_dept = $_POST['department'];
-                                $skills      = $_POST['skills'];
-                                $portfolio_link       = $_POST['link'];
-                                $status     = $_POST['status'];
-                                $role       = $_POST['role'];
-                                $phone      = $_POST['phone'];
-                                $address    = $_POST['address'];
-                                $mentor_desc       = $_POST['desc'];
-                                
-                                // Preapre the Image
-                                $imageName    = $_FILES['profile_image']['name'];
-                                $imageSize    = $_FILES['profile_image']['size'];
-                                $imageTmp     = $_FILES['profile_image']['tmp_name'];
-
-                                $formErrors = array();
-
-                                if ( strlen($fullname) < 3 ){
-                                    $formErrors[] = 'Username is too short!!!';
-                                }
-                                if ( $password != $repassword ){
-                                    $formErrors[] = 'Password Doesn\'t match!!!';
-                                }
-
-                                $imageAllowedExtension = array("jpg", "jpeg", "png");
-                                $ext_arr = explode('.', $imageName);
-                                $imageExtension = strtolower( end( $ext_arr ) );
-
-                                if ( !empty($imageName) ){
-                                    if ( !empty($imageName) && !in_array($imageExtension, $imageAllowedExtension) ){
-                                        $formErrors[] = "Not a valid file format";
-                                    }
-                                    if ( !empty($imageSize) && $imageSize > 2097152 ){
-                                        $formErrors[] = "Image size to large";
-                                    }
-                                }
-
-                                if ( empty($formErrors) ){
-                                    if(!empty($imageName)){
-                                        $image = rand(100000,1000000) . "__" . $imageName;
-                                        // Upload the Image to its own Folder Location
-                                        move_uploaded_file($imageTmp, "img/users/" . $image );
-                        
-                                        $sql = "INSERT INTO users ( name, email, password, address, phone, role, status, image, join_date ) 
-                                                VALUES ('$fullname', '$email', '$password', '$address', '$phone', '$role', '$status', '$image', now() )";
-                        
-                                        $addUser = mysqli_query($db, $sql);
-                        
-                                        if ( $addUser ){
-                                            $skills_list = implode(',',$skills);
-                                            $getUser   = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
-                                            $resUser   = mysqli_query($db,$getUser);
-                                            while($rowUser = mysqli_fetch_assoc($resUser)){
-                                                $user_id = $rowUser['id'];
-                                            }
-                                            $addmentor = "INSERT INTO `mentors`(`skills`, `mentor_dept`, `portfolio_link`, `mentor_desc`, `user_FK`) 
-                                                        VALUES ('$skills_list','$mentor_dept','$portfolio_link','$desc','$user_id')";
-                                            $addRes   = mysqli_query($db,$addmentor);
-                                            if($addRes){
-                                                $_SESSION['message'] = "New Mentor Add Successfully..";
-                                                $_SESSION['type']    = "success";
-                                                header("location: mentors.php?action=Manage");
-                                                exit();
-                                            }
-                                        }
-                                        else{
-                                            die("MySQLi Query Failed." . mysqli_error($db));
-                                        }
-                                    }
-                                    else{
-                                        $sql = "INSERT INTO users ( name, email, password, address, phone, role, status, join_date ) 
-                                            VALUES ('$name', '$email', '$password', '$address', '$phone', '$role', '$status', now()  )";
-                        
-                                        $addUser = mysqli_query($db, $sql);
-                        
-                                        if ( $addUser ){
-                                            $skills_list = implode(',',$skills);
-                                            $getUser   = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
-                                            $resUser   = mysqli_query($db,$getUser);
-                                            while($rowUser = mysqli_fetch_assoc($resUser)){
-                                                $user_id = $rowUser['id'];
-                                            }
-                                            $addmentor = "INSERT INTO `mentors`(`skills`, `mentor_dept`, `portfolio_link`, `mentor_desc`, `user_FK`) 
-                                                        VALUES ('$skills_list','$mentor_dept','$portfolio_link','$desc','$user_id')";
-                                            $addRes   = mysqli_query($db,$addmentor);
-                                            if($addRes){
-                                                $_SESSION['message'] = "New Mentor Add Successfully..";
-                                                $_SESSION['type']    = "success";
-                                                header("location: mentors.php?action=Manage");
-                                                exit();
-                                            }
-                                        }
-                                        else{
-                                            die("MySQLi Query Failed." . mysqli_error($db));
-                                        }
-                                    }
-                                    $mentor->insert($mentor);
-                                    
-                                }
-                                else{
-                                    $_SESSION['message_arr'] = $formErrors;
-                                    $_SESSION['type']    = "error";
-                                    header("location: mentors.php?action=Manage");
-                                    exit();
-                                }
-                            }
-                        }
                         else if($action == "Edit"){
                             if(isset($_GET['edit'])){
                                 $edit_id = $_GET['edit'];
-                                $sqlEdit = "SELECT * FROM users INNER JOIN mentors ON users.id = mentors.user_FK WHERE users.id = '$edit_id'";
-                                $resEdit = mysqli_query($db,$sqlEdit);
-                                $mentorObj = null;
-                                while($mentor = mysqli_fetch_object($resEdit)){
-                                    $mentorObj = $mentor;
-                                }
+
+                                // GET DATA FROM USERS TABLE
+                                $table_user = 'users';
+                                $data_user  = array(
+                                    'where' => array(
+                                        'id' => $edit_id
+                                    ),
+                                    'return_type' => 'single'
+                                );
+                                $user = $db->select($table_user, $data_user);
+                                
+                                // GET DATA FROM MENTORS TABLE
+                                $table_mentor = 'mentors';
+                                $data_mentor  = array(
+                                    'where' => array(
+                                        'user_FK' => $user->id
+                                    ),
+                                    'return_type' => 'single'
+                                );
+                                $mentor = $db->select( $table_mentor , $data_mentor );
+
+                                // GET DATA FROM MENTORS TABLE
+                                $table_dept = 'departments';
+                                $data_dept  = array(
+                                    'where' => array(
+                                        'dept_id' => $mentor->mentor_dept
+                                    ),
+                                    'return_type' => 'single'
+                                );
+                                $dept = $db->select( $table_dept , $data_dept );
+
+                                // GET DATA FROM COURSES TABLE
+                                $crs_arr = explode(',' , $mentor->crs_taking);
+
                                 ?>
                                     <div class="col-md-12">
                                         <div class="card card-secondary">
                                             <div class="card-header">
-                                                <h3 class="card-title">Add New Mentor</h3>
+                                                <h3 class="card-title">Edit New Mentor</h3>
                                             </div>
                                             <!-- /.card-header -->
                                             <!-- form start -->
-                                            <form role="form" action="mentors.php?action=Insert" method="POST" enctype="multipart/form-data">
+                                            <form role="form" action="controllers/MentorController.php" method="POST" enctype="multipart/form-data">
                                                 <div class="card-body">
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="exampleInputEmail1">Full Name</label>
-                                                                <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Enter Name" value="<?=$mentorObj->name?>">
+                                                                <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Enter Name" value="<?=$user->name?>">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="exampleInputEmail1">Email address</label>
-                                                                <input type="email" class="form-control" id="email" name="email" onkeyup="validateEmail()" placeholder="Enter Email" value="<?=$mentorObj->name?>">
+                                                                <input type="email" class="form-control" id="email" name="email" onkeyup="validateEmail()" placeholder="Enter Email" value="<?=$user->email?>">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="exampleInputPassword1">Password</label>
@@ -547,12 +496,12 @@
 
                                                             <div class="form-group">
                                                                 <label for="exampleInputPassword1">Phone</label>
-                                                                <input type="text" class="form-control" id="exampleInputPassword1" name="phone" placeholder="Phone" value="<?=$mentorObj->name?>">
+                                                                <input type="text" class="form-control" id="exampleInputPassword1" name="phone" placeholder="Phone" value="<?=$user->phone?>">
                                                             </div>
                                                             
 
                                                             <div class="form-group">
-                                                                <label for="exampleInputFile">File input</label>
+                                                                <label for="exampleInputFile">Profile Picture</label>
                                                                 <div class="input-group">
                                                                     <div class="custom-file">
                                                                         <input type="file" class="custom-file-input" id="profile_image" name="profile_image" onchange="getfileinfo()">
@@ -560,24 +509,34 @@
                                                                     </div>
                                                                 </div>
                                                                 <!-- PREVIEW SELECT FILE INFO START -->
-                                                                <div class="file-info mt-3" id="preview_block" style="display: none;">
+                                                                <div class="file-info mt-3" id="preview_block" style="display: <?php if(!empty($user->image)){echo "block";}else{echo "none";}?>;">
+                                                                    <?php
+                                                                        $table = "uploaded_file_info";
+                                                                        $data  = array(
+                                                                            'where' => array(
+                                                                                'file_name' => $user->image
+                                                                            ),
+                                                                            'return_type' => 'single'
+                                                                        );
+                                                                        $img_info = $db->select($table,$data);
+                                                                    ?>
                                                                     <div class="main-file-info ">
                                                                         <div class="row align-items-center mb-3 bg-light bg-custom">
                                                                             <div class="col-md-3">
-                                                                                <img src="" id="preview_file" alt="" width="100px" height="120px" class="w-100">
+                                                                                <img src="img/users/<?=$img_info->file_name?>" id="preview_file" alt="" width="100px" height="120px" class="w-100">
                                                                             </div>
                                                                             <div class="col-md-7" onmousedown='return false;' onselectstart='return false;'>
                                                                                 <p class="m-0" >
                                                                                     <span class="font-weight-bold">File Name : </span>
-                                                                                    <span id="file_name"></span>
+                                                                                    <span id="file_name"><?=$img_info->file_name?></span>
                                                                                 </p>
                                                                                 <p class="mt-1 mb-0" >
                                                                                     <span class="font-weight-bold">Size : </span>
-                                                                                    <span id="file_size"></span>
+                                                                                    <span id="file_size"><?=$img_info->file_size?></span>
                                                                                 </p>
                                                                                 <p class="m-0" >
                                                                                     <span class="font-weight-bold">Type : </span>
-                                                                                    <span id="file_type"></span>
+                                                                                    <span id="file_type"><?=$img_info->file_type?></span>
                                                                                     <span id="validate" class="text-danger"></span>
                                                                                 </p>
                                                                             </div>
@@ -593,17 +552,23 @@
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="exampleInputPassword1">Address</label>
-                                                                <input type="text" class="form-control" id="exampleInputPassword1" name="address" placeholder="Address">
+                                                                <input type="text" class="form-control" id="exampleInputPassword1" name="address" placeholder="Address" value="<?=$user->address?>">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="exampleInputPassword1">Department</label>
                                                                 <select name="department" id="select2dept" class="form-control">
+                                                                    <option value="0">Please Select Department</option>
                                                                     <?php
-                                                                        $deptSql = "SELECT * FROM departments WHERE dept_status = 1";
-                                                                        $resDept = mysqli_query($db,$deptSql);
-                                                                        while($rowDept = mysqli_fetch_assoc($resDept)){
+                                                                        $table_dept = 'departments';
+                                                                        $data_dept  = array(
+                                                                            'where' => array(
+                                                                                'dept_status' => 1
+                                                                            )
+                                                                        );
+                                                                        $dept_list = $db->select($table_dept, $data_dept);
+                                                                        foreach($dept_list as $dept){
                                                                             ?>
-                                                                                <option value="<?=$rowDept['dept_id']?>"><?=$rowDept['dept_title']?></option>
+                                                                                <option value="<?=$dept->dept_id?>" <?php if($dept->dept_id == $mentor->mentor_dept){ echo "selected";}?>><?=$dept->dept_title?></option>
                                                                             <?php
                                                                         }
                                                                     ?>
@@ -614,43 +579,73 @@
                                                                 <label for="exampleInputPassword1">Skills</label>
                                                                 <select name="skills[]" id="select2skills" class="form-control" multiple>
                                                                     <?php
-                                                                        $skillSql = "SELECT * FROM skills WHERE sk_status = 1";
-                                                                        $resskill = mysqli_query($db,$skillSql);
-                                                                        while($rowskill = mysqli_fetch_assoc($resskill)){
+                                                                        $table_sk = 'skills';
+                                                                        $data_sk  = array(
+                                                                            'where' => array(
+                                                                                'sk_status' => 1
+                                                                            )
+                                                                        );
+                                                                        $skills_list = $db->select($table_sk, $data_sk);
+                                                                        foreach($skills_list as $sk){
                                                                             ?>
-                                                                                <option value="<?=$rowskill['sk_id']?>"><?=$rowskill['sk_title']?></option>
+                                                                                <option value="<?=$sk->sk_id?>" <?php if(in_array($sk->sk_id , explode(',' , $mentor->skills))){ echo "selected";}?>><?=$sk->sk_title?></option>
                                                                             <?php
                                                                         }
                                                                     ?>
                                                                 </select>
                                                             </div>
+
+                                                            <div class="form-group">
+                                                                <label for="">Assign Course</label>
+                                                                <select name="crs_taking[]" id="select2crs" class="form-control" multiple>
+                                                                    <option value="0">Please Select Course</option>
+                                                                    <?php
+                                                                        $table_crs = 'courses';
+                                                                        $data_crs  = array(
+                                                                            'order_by' => 'crs_id DESC'
+                                                                        );
+
+                                                                        $crs_list = $db->select($table_crs, $data_crs);
+                                                                        foreach($crs_list as $crs){
+                                                                            ?>
+                                                                                <option value="<?=$crs->crs_id?>" <?php if(in_array($crs->crs_id , explode(',' , $mentor->crs_taking))){ echo "selected";}?> >( <?=$crs->crs_customID?> )<?=$crs->crs_title?></option>
+                                                                            <?php
+                                                                        }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+
                                                             <div class="form-group">
                                                                 <label for="exampleInputPassword1">Portfolio Link</label>
-                                                                <input type="text" class="form-control" id="exampleInputPassword1" name="link" placeholder="Password">
+                                                                <input type="text" class="form-control" id="exampleInputPassword1" name="link" placeholder="Portfolio Link" value="<?=$mentor->portfolio_link?>">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="exampleInputPassword1">Status</label>
                                                                 <select name="status" id="" class="form-control">
                                                                     <option value="1">Please Select Status</option>
-                                                                    <option value="1">Active</option>
-                                                                    <option value="0">Inactive</option>
+                                                                    <option value="1" <?php if($user->status==1){echo "selected";}?> >Active</option>
+                                                                    <option value="0" <?php if($user->status==0){echo "selected";}?>>Inactive</option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="exampleInputPassword1">Role</label>
                                                                 <select name="role" id="" class="form-control">
-                                                                    <option value="0">Please Select Role</option>
-                                                                    <option value="2">Mentor</option>
+                                                                    <option value="0" <?php if($user->status==0){echo "selected";}?>>Please Select Role</option>
+                                                                    <option value="2" <?php if($user->status==2){echo "selected";}?>>Mentor</option>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <div class="form-group">
                                                                 <label for="exampleInputPassword1">Profile Description</label>
-                                                                <textarea class="textarea" name="desc" placeholder="Place some text here" style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid rgb(221, 221, 221); padding: 10px; display: none;"></textarea>
+                                                                <textarea class="textarea" name="desc" placeholder="Place some text here" style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid rgb(221, 221, 221); padding: 10px; display: none;">
+                                                                    <?=$mentor->mentor_desc?>
+                                                                </textarea>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3 m-auto">
+                                                            <input type="hidden" name="action" value="edit">
+                                                            <input type="hidden" name="edit_id" value="<?=$edit_id?>">
                                                             <button type="submit" class="btn w-100 btn-primary">Submit</button>
                                                         </div>
                                                     </div>

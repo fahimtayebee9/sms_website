@@ -80,6 +80,20 @@
       })
     })
 
+    // MENTOR ADD DEPT
+    $(function () {
+      $('#select2crs').select2()
+
+      //Initialize Select2 Elements
+      $('#select2crs').select2({
+        theme: 'bootstrap4',
+        placeholder: 'Please Assign the Courses',
+        tags: true,
+        allowClear: true,
+        closeOnSelect: true
+      })
+    })
+
     // MENTOR ADD SKILLS
     $(function () {
       $('#select2skills').select2()
@@ -133,6 +147,34 @@
 
     }
 
+  </script>
+
+  <script>
+    function getinfo(){
+      alert(document.getElementById('prev_img').files[0].name);
+      var file_name = document.getElementById('prev_img').files[0].name;
+      var sizeKb = Math.ceil(document.getElementById('prev_img').files[0].size / 1024);
+      var sizeMb = document.getElementById('prev_img').files[0].size / (1024 * 1024);
+      var file_type = document.getElementById('prev_img').files[0].type;
+      document.getElementById('preview_block').style.display = "block";
+      document.getElementById('preview_block').style.maxHeight = "200px";
+      document.getElementById('file_name').innerHTML = file_name;
+      document.getElementById('file_size').innerHTML = sizeMb.toFixed(3) + " Mb";
+      document.getElementById('choose_file').innerHTML = file_name;
+      var valid_types = ["jpg", "jpeg", "png", "gif"];
+      var type_check = valid_types.includes(file_type.split('/')[1].toLowerCase());
+
+      if(type_check){
+        document.getElementById('preview_file').src = window.URL.createObjectURL(document.getElementById('profile_image').files[0]);
+        document.getElementById('file_type').innerHTML = file_type.split('/')[1] + "";
+        document.getElementById('validate').innerHTML  = "";
+      }
+      else{
+        $("#preview_file").attr("src", "https://webstockreview.net/images/google-docs-icon-png-3.png");
+        document.getElementById('file_type').innerHTML = file_type.split('/')[1];
+        document.getElementById('validate').innerHTML  = "(not valid file)";
+      }
+    }
   </script>
 
 

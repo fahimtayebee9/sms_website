@@ -34,7 +34,7 @@
                 $i = 0;
                 foreach($data['where'] as $key => $value){
                     $add  = ( $i > 0 ) ? ' AND ' : '';
-                    $sql .= "$add" . "$key=$value";
+                    $sql .= "$add" . "$key='$value'";
                     $i++; 
                 }
             }
@@ -81,11 +81,20 @@
             if( !empty($data) && is_array($data)){
                 $key = "";
                 $value = "";
+                $keyValue = "";
                 $i = 0;
 
                 $keys = implode(',', array_keys($data));
                 $values = ":" . implode(', :', array_keys($data));
-                $sql = "INSERT INTO " . $table . " (" . $keys . ") VALUES (" . $values . ")";
+                
+                $i = 0;
+                foreach ($data as $key => $val) {
+                    $add  = ( $i > 0 ) ? ' , ' : '';
+                    $keyValue .= $add . "'" . $val . "'";
+                    $i++;
+                }
+
+                $sql = "INSERT INTO " . $table . " (" . $keys . ") VALUES (" . $keyValue . ")";
                 
                 $query = $this->pdoCon->prepare($sql);
 
@@ -107,18 +116,21 @@
         // UPDATE METHOD (UPDATE)
         public function update( $table , $data , $whereCondition){
             if( !empty($data) && is_array($data)){
-                $key = "";
+                $keyValue = "";
                 $value = "";
                 
                 $sql = "UPDATE " . $table . " SET ";
                 $dataSet = array();
 
                 // ADDING KEY AND VALUES FOR EACH DATA
-                foreach ($data as $fieldName => $fieldValue) {
-                    $dataSet [] = $fieldName . '= :' . $fieldName;
+                $i = 0;
+                foreach ($data as $key => $value) {
+                    $add  = ( $i > 0 ) ? ' , ' : '';
+                    $keyValue .= $add . $key . "= '" . $value . "'";
+                    $i++;
                 }
 
-                $sql .= implode(', ', $dataSet);
+                $sql .= $keyValue;
 
                 // ADD WHERE CONDITION (as before in select function)
                 if(array_key_exists('where',$whereCondition)){
@@ -127,7 +139,7 @@
                     $ix = 0;
                     foreach($whereCondition['where'] as $key => $val){
                         $add  = ( $ix > 0 ) ? ' AND ' : '';
-                        $sql .= "$add" . "$key = $val";
+                        $sql .= "$add" . "$key = '$val'";
                         $ix++; 
                     }
                 }
