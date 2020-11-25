@@ -74,9 +74,29 @@
       //Initialize Select2 Elements
       $('#select2crs').select2({
         theme: 'bootstrap4',
-        placeholder: 'Please Assign the Courses',
-        tags: true,
+        placeholder: {
+          id: '', // the value of the option
+          text: 'Please Select Course'
+        },
         allowClear: true,
+        tags: true,
+        closeOnSelect: true
+      })
+    })
+
+    // MENTOR ADD DEPT
+    $(function () {
+      $('#select2status').select2()
+
+      //Initialize Select2 Elements
+      $('#select2status').select2({
+        theme: 'bootstrap4',
+        placeholder: {
+          id: '', // the value of the option
+          text: 'Please Select Status'
+        },
+        allowClear: true,
+        tags: true,
         closeOnSelect: true
       })
     })
@@ -109,45 +129,11 @@
     })
   </script>
 
-    <!-- IMAGE SELECT ACTION -->
-  <script>
-    function getfileinfo(){
-      var file_name = document.getElementById('profile_image').files[0].name;
-      var sizeKb = Math.ceil(document.getElementById('profile_image').files[0].size / 1024);
-      var sizeMb = document.getElementById('profile_image').files[0].size / (1024 * 1024);
-      var file_type = document.getElementById('profile_image').files[0].type;
-      document.getElementById('preview_block').style.display = "block";
-      document.getElementById('preview_block').style.maxHeight = "200px";
-      document.getElementById('file_name').innerHTML = file_name;
-      document.getElementById('file_size').innerHTML = sizeMb.toFixed(3) + " Mb";
-      document.getElementById('choose_file').innerHTML = file_name;
-      var valid_types = ["jpg", "jpeg", "png", "gif"];
-      var type_check = valid_types.includes(file_type.split('/')[1].toLowerCase());
+  
 
-      if(type_check){
-        document.getElementById('preview_file').src = window.URL.createObjectURL(document.getElementById('profile_image').files[0]);
-        document.getElementById('file_type').innerHTML = file_type.split('/')[1] + "";
-        document.getElementById('validate').innerHTML  = "";
-      }
-      else{
-        $("#preview_file").attr("src", "https://webstockreview.net/images/google-docs-icon-png-3.png");
-        document.getElementById('file_type').innerHTML = file_type.split('/')[1];
-        document.getElementById('validate').innerHTML  = "(not valid file)";
-      }
-      
-    }
-    
-    function resetPreview(){
-      document.getElementById('preview_block').style.display = "none";
-      document.getElementById('file_name').innerHTML = "File Name : ";
-      document.getElementById('file_size').innerHTML = "File Size : ";
-      document.getElementById('preview_file').src = "";
-      document.getElementById('profile_image').value = null;
-      document.getElementById('choose_file').innerHTML = "Choose File";
+    <!-- FILE SELECTOR PLUGIN -->
+    <script src="assets/js/file-select.js"></script>
 
-    }
-
-  </script>
 
     <!-- GET INFO -->
   <script>

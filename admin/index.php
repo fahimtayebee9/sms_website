@@ -1,5 +1,4 @@
 <?php
-  include "inc/db_config.php";
   ob_start();
   
   session_start();
@@ -134,48 +133,51 @@
 </html>
 
 <?php
+  include "controllers/Database.php";
+  $db = new Database();
   $action = isset($_GET['action']) ? $_GET['action'] : "";
   if($action == "SignIn"){
     if($_SERVER['REQUEST_METHOD'] == "POST"){
-      $email = $_POST['email'];
-      $password = sha1($_POST['password']);
+      $data = array(
+        'where' => array(
+          'email' => $_POST['email'],
+          'password' => sha1($_POST['password'])
+        ),
+        'return_type' => 'single'
+      );
 
-      $remember   = $_POST['rememberme'];
+      $table = 'users';
 
-      $sql = "SELECT * FROM `users` WHERE email = '$email' AND password = '$password'";
-      $result = mysqli_query($db ,$sql);
+      $user = $db->select($table,$data);
 
-      if(mysqli_num_rows($result) > 0){
-        while($row = mysqli_fetch_assoc($result)){
-          if(isset($remember)){
-            setcookie("email",$email,time() + (86400 * 30), "/");
-            setcookie("password",$password,time() + (86400 * 30), "/");
+      if( !empty( $user ) ){
+        if( isset( $_POST['rememberme'] ) ){
+          setcookie("email",$email,time() + (86400 * 30), "/");
+          setcookie("password",$password,time() + (86400 * 30), "/");
+        }
+        else{
+          if($user->status == 0){
+            $_SESSION['message'] = "USER NOT AVAILABLE..." ;
+            $_SESSION['type'] = "error";
+            header("location: index.php");
+            exit();
           }
-          else{
-            if($row['status'] == 0){
-              $_SESSION['message'] = "USER NOT AVAILABLE..." ;
-              $_SESSION['type'] = "error";
-              header("location: my-account.php?action=SignIn");
-              exit();
-              break;
-            }
-            else if($row['role'] == 1 && $row['status'] == 1){
-              $_SESSION['user_id'] = $row['id'];
-              $_SESSION['name'] = $row['name'];
-              $_SESSION['email'] = $row['email'];
-              $_SESSION['phone'] = $row['phone'];
-              $_SESSION['address'] = $row['address'];
-              $_SESSION['password'] = $row['password'];
-              $_SESSION['image'] = $row['image'];
-              $_SESSION['role'] = $row['role'];
-              $_SESSION['status'] = $row['status'];
-              $_SESSION['join_date'] = $row['join_date'];
-              
-              $_SESSION['message'] = "LOGIN SUCCESS";
-              $_SESSION['type'] = "success";
-              header("location: dashboard.php");
-              exit();
-            }
+          else if($user->role == 1 && $user->status == 1){
+            $_SESSION['user_id']  = $user->id;
+            $_SESSION['name']     = $user->name;
+            $_SESSION['email']    = $user->email;
+            $_SESSION['phone']    = $user->phone;
+            $_SESSION['address']  = $user->address;
+            $_SESSION['password'] = $user->password;
+            $_SESSION['image']    = $user->image;
+            $_SESSION['role']     = $user->role;
+            $_SESSION['status']   = $user->status;
+            $_SESSION['join_date'] = $user->join_date;
+            
+            $_SESSION['message'] = "LOGIN SUCCESS";
+            $_SESSION['type'] = "success";
+            header("location: dashboard.php");
+            exit();
           }
         }
       }

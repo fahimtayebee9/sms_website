@@ -287,52 +287,13 @@
                                                             <label for="exampleInputFile">File input</label>
                                                             <div class="input-group">
                                                                 <div class="custom-file">
-                                                                    <input type="file" class="custom-file-input" id="profile_image" name="profile_image" onchange="getfileinfo()">
+                                                                    <input type="file" class="custom-file-input" id="profile_image" name="profile_image">
                                                                     <label class="custom-file-label" for="exampleInputFile" id="choose_file">Choose file</label>
                                                                 </div>
                                                             </div>
                                                             <!-- PREVIEW SELECT FILE INFO START -->
                                                             <div class="file-info mt-3" id="preview_block" style="display: none;">
-                                                                <div class="main-file-info ">
-                                                                    <div class="row align-items-center mb-3 bg-light bg-custom">
-                                                                        <div class="col-md-3">
-                                                                            <img src="" id="preview_file" alt="" width="100px" height="120px" class="w-100">
-                                                                        </div>
-                                                                        <div class="col-md-7" onmousedown='return false;' onselectstart='return false;'>
-                                                                            <table>
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td><span class="font-weight-bold">File Name</span></td>
-                                                                                        <td class="pl-2 pr-2"> : </td>
-                                                                                        <td><span id="file_name"></span></td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td>
-                                                                                            <span class="font-weight-bold">Size</span>
-                                                                                        </td>
-                                                                                        <td class="pl-2 pr-2"> : </td>
-                                                                                        <td>
-                                                                                            <span id="file_size"></span>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td>
-                                                                                            <span class="font-weight-bold">Type</span>
-                                                                                        </td>
-                                                                                        <td class="pl-2 pr-2"> : </td>
-                                                                                        <td>
-                                                                                            <span id="file_type"></span>
-                                                                                            <span id="validate" class="text-danger"></span>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                        <div class="col-md-2 text-center">
-                                                                            <button type="reset" class="btn btn-outline-danger" onclick="resetPreview()"><i class="fas fa-trash-alt"></i></button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                                
                                                             </div>
                                                             <!-- PREVIEW SELECT FILE INFO END -->
                                                         </div>
