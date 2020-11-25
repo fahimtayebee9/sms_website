@@ -259,36 +259,36 @@
                                 <th><?php echo $i; ?></th>
                                 <td><?php echo $dept_title; ?></td>
                                 <td>
-                                <?php
-                                    if ( $dept_status == 0 ){ ?>
-                                    <span class="badge badge-danger">Inactive</span>
-                                    <?php }
-                                    else if ( $dept_status == 1 ){ ?>
-                                    <span class="badge badge-success">Active</span>
-                                    <?php }
-                                ?>
+                                  <?php
+                                      if ( $dept_status == 0 ){ ?>
+                                      <span class="badge badge-danger">Inactive</span>
+                                      <?php }
+                                      else if ( $dept_status == 1 ){ ?>
+                                      <span class="badge badge-success">Active</span>
+                                      <?php }
+                                  ?>
                                 </td>
 
                                 <td>
-                                <?php
-                                    if($sub_dept != 0){
-                                        $searchData = array(
-                                          'where' => array(
-                                            'dept_id' => $sub_dept
-                                          ),
-                                          'return_type' => 'single'
-                                        );
-                                        $resparent    = $db->select('departments',$searchData);
-                                        echo $resparent->dept_title;
-                                    }
-                                    else{
-                                        echo "None";
-                                    }
-                                ?>
+                                  <?php
+                                      if($sub_dept != 0){
+                                          $searchData = array(
+                                            'where' => array(
+                                              'dept_id' => $sub_dept
+                                            ),
+                                            'return_type' => 'single'
+                                          );
+                                          $resparent    = $db->select('departments',$searchData);
+                                          echo $resparent->dept_title;
+                                      }
+                                      else{
+                                          echo "None";
+                                      }
+                                  ?>
                                 </td>
                                 
                                 <td class="project-actions">
-                                    <a class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#delete<?php echo $dept_id; ?>" href="#">
+                                    <a class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#view<?php echo $dept_id; ?>" href="#">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     <a class="btn btn-outline-primary btn-sm" href="departments.php?edit=<?php echo $dept_id; ?>">
@@ -307,52 +307,55 @@
                         
                     </tbody>
                 </table>
-                        <?php if( ceil($total_rows / $rows_per_page) > 0) : ?>
-                        <nav aria-label="Page navigation example vertical-align-bottom ">
-                            <ul class="pagination justify-content-center mt-3">
 
-                                <!-- PREVIOUS BUTTON -->
-                                <?php if($current_page > 1) : ?>
-                                    <li class="page-item ">
-                                        <a class="page-link" href="departments.php?page=<?=($current_page-1)?>" tabindex="-1" aria-disabled="true">&laquo;</a>
-                                    </li>
-                                <?php else : ?>
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="" tabindex="-1" aria-disabled="true">&laquo;</a>
-                                    </li>
-                                <?php endif;?>
+                <?php include "modals/dept_modal.php";?>
 
-                                <?php if($current_page - 2 > 0) : ?>
-                                    <li class="page-item"><a class="page-link" href="departments.php?page=<?=($current_page - 2 )?>"><?=($current_page - 2 )?></a></li>
-                                <?php endif;?>
+                <?php if( ceil($total_rows / $rows_per_page) > 0) : ?>
+                <nav aria-label="Page navigation example vertical-align-bottom ">
+                    <ul class="pagination justify-content-center mt-3">
 
-                                <?php if($current_page - 1 > 0) : ?>
-                                    <li class="page-item"><a class="page-link" href="departments.php?page=<?=($current_page - 1 )?>"><?=($current_page - 1 )?></a></li>
-                                <?php endif;?>
-
-                                <li class="page-item active"><a class="page-link" href="departments.php?page=<?=$current_page?>"><?=$current_page?></a></li>
-
-                                <?php if($current_page + 1 < ceil($total_rows / $rows_per_page) + 1 ) : ?>
-                                    <li class="page-item"><a class="page-link" href="departments.php?page=<?=($current_page + 1 )?>"><?=($current_page + 1 )?></a></li>
-                                <?php endif;?>
-
-                                <?php if($current_page + 2 < ceil($total_rows / $rows_per_page) + 1 ) : ?>
-                                    <li class="page-item"><a class="page-link" href="departments.php?page=<?=($current_page + 2 )?>"><?=($current_page + 2 )?></a></li>
-                                <?php endif;?>
-                                
-                                <!-- NEXT BUTTON -->
-                                <?php if($current_page < ceil($total_rows / $rows_per_page)) : ?>
-                                    <li class="page-item ">
-                                        <a class="page-link" href="departments.php?page=<?=($current_page + 1 )?>" tabindex="-1" aria-disabled="true">&raquo;</a>
-                                    </li>
-                                <?php else : ?>
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="" tabindex="-1" aria-disabled="true">&raquo;</a>
-                                    </li>
-                                <?php endif;?>
-                            </ul>
-                        </nav>
+                        <!-- PREVIOUS BUTTON -->
+                        <?php if($current_page > 1) : ?>
+                            <li class="page-item ">
+                                <a class="page-link" href="departments.php?page=<?=($current_page-1)?>" tabindex="-1" aria-disabled="true">&laquo;</a>
+                            </li>
+                        <?php else : ?>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="" tabindex="-1" aria-disabled="true">&laquo;</a>
+                            </li>
                         <?php endif;?>
+
+                        <?php if($current_page - 2 > 0) : ?>
+                            <li class="page-item"><a class="page-link" href="departments.php?page=<?=($current_page - 2 )?>"><?=($current_page - 2 )?></a></li>
+                        <?php endif;?>
+
+                        <?php if($current_page - 1 > 0) : ?>
+                            <li class="page-item"><a class="page-link" href="departments.php?page=<?=($current_page - 1 )?>"><?=($current_page - 1 )?></a></li>
+                        <?php endif;?>
+
+                        <li class="page-item active"><a class="page-link" href="departments.php?page=<?=$current_page?>"><?=$current_page?></a></li>
+
+                        <?php if($current_page + 1 < ceil($total_rows / $rows_per_page) + 1 ) : ?>
+                            <li class="page-item"><a class="page-link" href="departments.php?page=<?=($current_page + 1 )?>"><?=($current_page + 1 )?></a></li>
+                        <?php endif;?>
+
+                        <?php if($current_page + 2 < ceil($total_rows / $rows_per_page) + 1 ) : ?>
+                            <li class="page-item"><a class="page-link" href="departments.php?page=<?=($current_page + 2 )?>"><?=($current_page + 2 )?></a></li>
+                        <?php endif;?>
+                        
+                        <!-- NEXT BUTTON -->
+                        <?php if($current_page < ceil($total_rows / $rows_per_page)) : ?>
+                            <li class="page-item ">
+                                <a class="page-link" href="departments.php?page=<?=($current_page + 1 )?>" tabindex="-1" aria-disabled="true">&raquo;</a>
+                            </li>
+                        <?php else : ?>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="" tabindex="-1" aria-disabled="true">&raquo;</a>
+                            </li>
+                        <?php endif;?>
+                    </ul>
+                </nav>
+                <?php endif;?>
               </div>
               <!-- /.card-body -->
             </div>
