@@ -42,6 +42,14 @@
                     // Upload the Image to its own Folder Location
                     move_uploaded_file($imageTmp, "../img/users/" . $image );
 
+                    $file_data = array(
+                        'file_name' => $image,
+                        'file_size' => round( ( $imageSize / ( 1024 * 1024 ) ), 3),
+                        'file_type' => $imageExtension
+                    );
+
+                    $insFile = $db->insert('uploaded_file_info', $file_data);
+
                     $data = array(
                         'name'      => $_POST['fullname'],
                         'email'     => $_POST['email'],
@@ -345,8 +353,5 @@
             }
         }
 
-        if($_REQUEST['action'] == "delete"){
-
-        }
     }
 ?>

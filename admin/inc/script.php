@@ -178,6 +178,63 @@
   </script>
 
 
+  <script>
+    var Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3500
+      });
+    function deleteData(table_name, delete_id){
+      
+      Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!',
+          timer: 4000
+      }).then((result) => {
+          if (!result.isConfirmed) {
+            alert(table_name + "\n" + delete_id);
+            var xhttp = new XMLHttpRequest();
+            xhttp.open('POST', 'controllers/DeleteController.php', true);
+            xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhttp.send('action=delete&delete_id='+delete_id+"&table="+table_name);
+            xhttp.onreadystatechange = function (){
+              if(this.readyState == 4 && this.status == 200){
+                if(this.responseText != ""){
+                  Toast.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'RECORD has been deleted.',
+                    showConfirmButton: false,
+                    timer: 2500
+                  })
+                }else{
+                  Swal.fire(
+                    'RECORD Not Deleted!',
+                    'RECORD has Not been deleted.',
+                    'error'
+                  )
+                }
+                if(table_name == "mentors"){
+                  setTimeout(loadPageMentor, 2400);
+                }
+                // alert(this.responseText);
+              }	
+            }
+          }
+      })
+    }
+
+    function loadPageMentor(){
+      window.location = "mentors.php?action=Manage";
+    }
+  </script>
+
   <!-- TEXT AREA -->
   <script>
     $(function () {
@@ -243,32 +300,33 @@
       }
     </script>
 
-  <script>
-      var Toast = Swal.mixin({
-        toast: true,
-        // position: 'top-end',
-        showConfirmButton: false,
-        timer: 3500
-      });
+    <!-- TOAST -->
+    <script>
+        var Toast = Swal.mixin({
+          toast: true,
+          // position: 'top-end',
+          showConfirmButton: false,
+          timer: 3500
+        });
 
-      <?php
-        
-        if(isset($_SESSION['message'])){
-            if(isset($_SESSION['type'])){
-              ?>
-                Toast.fire({
-                  position: 'top-end',
-                  icon: '<?=$_SESSION['type']?>',
-                  title: '<?=$_SESSION['message']?>',
-                  showConfirmButton: false,
-                  timer: 3500
-                })
-              <?php
-            }
-          unset($_SESSION['message'],$_SESSION['type']);
-        }
-      ?>
-  </script>
+        <?php
+          
+          if(isset($_SESSION['message'])){
+              if(isset($_SESSION['type'])){
+                ?>
+                  Toast.fire({
+                    position: 'top-end',
+                    icon: '<?=$_SESSION['type']?>',
+                    title: '<?=$_SESSION['message']?>',
+                    showConfirmButton: false,
+                    timer: 3500
+                  })
+                <?php
+              }
+            unset($_SESSION['message'],$_SESSION['type']);
+          }
+        ?>
+    </script>
 
   <!-- <script>
     // REMOVING NOTIFICATION COUNT
@@ -289,96 +347,9 @@
     }
   </script> -->
 
-  <!-- <script>
-    function updateComment(cmt_id,is_parent){
-      var status_up = document.getElementById('status').value;
-      var xhttp = new XMLHttpRequest();
-      xhttp.open('POST', 'controllers/category_controller.php', true);
-      xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-      xhttp.send('updateID='+cmt_id+"&status_up="+status_up+"&is_parent="+is_parent);
-      xhttp.onreadystatechange = function (){
-          if(this.readyState == 4 && this.status == 200){
-              if(this.responseText != ""){
-                Toast.fire({
-                  position: 'center-start',
-                  icon: 'success',
-                  title: 'Comment Status Has been Updated',
-                  showConfirmButton: false,
-                  timer: 1500
-                })
-              }else{
-                Swal.fire({
-                  position: 'top-end',
-                  icon: 'error',
-                  title: 'Comment Status Not Updated',
-                  showConfirmButton: false,
-                  timer: 1500
-                })
-              }
-          }	
-      }
-    }
-  </script> -->
-
- <!-- <script>
-    var Toast = Swal.mixin({
-      toast: true,
-      position: 'center-start',
-      showConfirmButton: false,
-      timer: 3500
-    });
-
-    function deletePost(delete_id){
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!',
-        timer: 4000
-      }).then((result) => {
-        if (result.isConfirmed) {
-          var xhttp = new XMLHttpRequest();
-          xhttp.open('POST', 'controllers/post_controller.php', true);
-          xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-          xhttp.send('delete_id='+delete_id);
-          xhttp.onreadystatechange = function (){
-            if(this.readyState == 4 && this.status == 200){
-              if(this.responseText != ""){
-                Toast.fire({
-                  position: 'top-end',
-                  icon: 'success',
-                  title: 'Your Post has been deleted.',
-                  showConfirmButton: false,
-                  timer: 2500
-                })
-              }else{
-                Swal.fire(
-                  'Post Not Deleted!',
-                  'Your Post has Not been deleted.',
-                  'error'
-                )
-              }
-              setTimeout(loadPage, 2400);
-            }	
-          }
-        }
-      })
-    }
-    function loadPage(){
-      window.location = "post.php?do=Manage";
-    }
-  </script> -->
 
   <!-- CKEDITOR PLUGIN -->
   <script src="plugins/ckeditor/ckeditor.js"></script>
-
-  <!-- <script>
-      CKEDITOR.replace('ckeditor');
-  </script> -->
-
 
 <?php
 	ob_end_flush();

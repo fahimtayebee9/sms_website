@@ -175,7 +175,15 @@
 
                 $keys = implode(',', array_keys($data));
                 $values = ":" . implode(', :', array_keys($data));
-                $sql = "DELETE FROM " . $table . " WHERE " . $keys . " = " . $values;
+                
+                $sql = "DELETE FROM " . $table . " WHERE "  ;
+                
+                foreach($data as $key => $value){
+                    $add = ( $i > 0 ) ? ' AND ' : '';
+                    $sql .= $add . $key . " = '" . $value . "'";
+                    $i++;
+                }
+
                 $query = $this->pdoCon->prepare($sql);
 
                 foreach($data as $key => $value){
@@ -185,7 +193,7 @@
                 $deleteData = $query->execute();
 
                 if($deleteData){
-                    return $this->pdoCon->lastInsertId();
+                    return true;
                 }
                 else{
                     return false;

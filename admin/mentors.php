@@ -192,10 +192,10 @@
                                                                                         <i class="fas fa-pencil-alt">
                                                                                         </i>
                                                                                     </a>
-                                                                                    <a class="btn btn-outline-danger btn-sm" href="#" data-toggle="modal" data-target="#delete<?=$userInfo->id?>">
+                                                                                    <button class="btn btn-outline-danger btn-sm" onclick="deleteData('mentors', <?=$userInfo->id?>)">
                                                                                         <i class="fas fa-trash">
                                                                                         </i>
-                                                                                    </a>
+                                                                                    </button>
                                                                                 </td>
                                                                             </tr>
                                                                 <?php
@@ -299,19 +299,34 @@
                                                                             <img src="" id="preview_file" alt="" width="100px" height="120px" class="w-100">
                                                                         </div>
                                                                         <div class="col-md-7" onmousedown='return false;' onselectstart='return false;'>
-                                                                            <p class="m-0" >
-                                                                                <span class="font-weight-bold">File Name : </span>
-                                                                                <span id="file_name"></span>
-                                                                            </p>
-                                                                            <p class="mt-1 mb-0" >
-                                                                                <span class="font-weight-bold">Size : </span>
-                                                                                <span id="file_size"></span>
-                                                                            </p>
-                                                                            <p class="m-0" >
-                                                                                <span class="font-weight-bold">Type : </span>
-                                                                                <span id="file_type"></span>
-                                                                                <span id="validate" class="text-danger"></span>
-                                                                            </p>
+                                                                            <table>
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td><span class="font-weight-bold">File Name</span></td>
+                                                                                        <td class="pl-2 pr-2"> : </td>
+                                                                                        <td><span id="file_name"></span></td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <span class="font-weight-bold">Size</span>
+                                                                                        </td>
+                                                                                        <td class="pl-2 pr-2"> : </td>
+                                                                                        <td>
+                                                                                            <span id="file_size"></span>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <span class="font-weight-bold">Type</span>
+                                                                                        </td>
+                                                                                        <td class="pl-2 pr-2"> : </td>
+                                                                                        <td>
+                                                                                            <span id="file_type"></span>
+                                                                                            <span id="validate" class="text-danger"></span>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
                                                                         </div>
                                                                         <div class="col-md-2 text-center">
                                                                             <button type="reset" class="btn btn-outline-danger" onclick="resetPreview()"><i class="fas fa-trash-alt"></i></button>
@@ -526,19 +541,34 @@
                                                                                 <img src="img/users/<?=$img_info->file_name?>" id="preview_file" alt="" width="100px" height="120px" class="w-100">
                                                                             </div>
                                                                             <div class="col-md-7" onmousedown='return false;' onselectstart='return false;'>
-                                                                                <p class="m-0" >
-                                                                                    <span class="font-weight-bold">File Name : </span>
-                                                                                    <span id="file_name"><?=$img_info->file_name?></span>
-                                                                                </p>
-                                                                                <p class="mt-1 mb-0" >
-                                                                                    <span class="font-weight-bold">Size : </span>
-                                                                                    <span id="file_size"><?=$img_info->file_size?></span>
-                                                                                </p>
-                                                                                <p class="m-0" >
-                                                                                    <span class="font-weight-bold">Type : </span>
-                                                                                    <span id="file_type"><?=$img_info->file_type?></span>
-                                                                                    <span id="validate" class="text-danger"></span>
-                                                                                </p>
+                                                                                <table>
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td><span class="font-weight-bold">File Name</span></td>
+                                                                                            <td class="pl-2 pr-2"> : </td>
+                                                                                            <td><span id="file_name"><?=$img_info->file_name?></span></td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td>
+                                                                                                <span class="font-weight-bold">Size</span>
+                                                                                            </td>
+                                                                                            <td class="pl-2 pr-2"> : </td>
+                                                                                            <td>
+                                                                                                <span id="file_size"><?=$img_info->file_size?></span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td>
+                                                                                                <span class="font-weight-bold">Type</span>
+                                                                                            </td>
+                                                                                            <td class="pl-2 pr-2"> : </td>
+                                                                                            <td>
+                                                                                                <span id="file_type"><?=$img_info->file_type?></span>
+                                                                                                <span id="validate" class="text-danger"></span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
                                                                             </div>
                                                                             <div class="col-md-2 text-center">
                                                                                 <button type="reset" class="btn btn-outline-danger" onclick="resetPreview()"><i class="fas fa-trash-alt"></i></button>
@@ -658,12 +688,6 @@
                                     </div>
                                 <?php
                             }
-                        }
-                        else if($action == "Update"){
-
-                        }
-                        else if($action == "Delete"){
-
                         }
                         else if($action == "View"){
 
