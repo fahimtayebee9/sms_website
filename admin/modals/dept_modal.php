@@ -22,7 +22,7 @@
                                             <table class="table">
                                                 <tbody>
                                                     <tr>
-                                                        <td class="font-weight-bold">Department Name</td>
+                                                        <td class="font-weight-bold" width="40%">Department Name</td>
                                                         <td class="font-weight-bold pr-1 pl-1"> : </td>
                                                         <td ><?=$dept->dept_title?></td>
                                                     </tr>
