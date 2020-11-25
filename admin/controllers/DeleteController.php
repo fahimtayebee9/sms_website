@@ -3,11 +3,11 @@
     session_start();
     $db = new Database();
 
-    if( isset( $_POST['action'] ) && !empty( $_POST['action'] )){
-        if($_POST['action'] == "delete"){
+    if( isset( $_GET['action'] ) && !empty( $_GET['action'] )){
+        if($_GET['action'] == "delete"){
 
-            $table      = $_POST['table'];
-            $delete_id  = $_POST['delete_id'];
+            $table      = $_GET['table'];
+            $delete_id  = $_GET['delete_id'];
 
             $data = array(
                 "where" => array(
@@ -55,12 +55,32 @@
                     }
                 }
             }
+            else if($table == 'departments'){
+                $del_data = array(
+                    'dept_id' => $delete_id
+                );
+                $userDel = $db->delete($table, $del_data);
+                if($userDel){
+                    $_SESSION['message'] = "Record Deleted Successfully..";
+                    $_SESSION['type']    = "success";
+                    header("location: ../$table.php?action=Manage");
+                    echo "Done";
+                    exit();
+                }
+                else{
+                    $_SESSION['message'] = "Record NOT Deleted Successfully..";
+                    $_SESSION['type']    = "error";
+                    die("MySQLi Query Failed.   " . mysqli_error($db));
+                    header("location: ../$table.php?action=Manage");
+                    exit();
+                }
+            }
             else{
                 $_SESSION['message'] = "Record NOT Deleted Successfully..";
                 $_SESSION['type']    = "error";
                 die("MySQLi Query Failed.   " . mysqli_error($db));
                 header("location: ../$table.php?action=Manage");
-                echo "Done";
+                echo "";
                 exit();
             }
         }

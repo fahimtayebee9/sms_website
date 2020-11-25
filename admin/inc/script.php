@@ -52,19 +52,6 @@
 
 
   <script>
-    // DEPT Add SELECT
-    $(function () {
-      $('#select2adddept').select2()
-
-      //Initialize Select2 Elements
-      $('#select2adddept').select2({
-        theme: 'bootstrap4',
-        placeholder: 'Please Select the Parent Department',
-        tags: true,
-        allowClear: true,
-        closeOnSelect: true
-      })
-    })
 
     // MENTOR ADD DEPT
     $(function () {
@@ -102,6 +89,19 @@
       $('#select2skills').select2({
         theme: 'bootstrap4',
         placeholder: 'Please Select Skills',
+        tags: true,
+        allowClear: true,
+        closeOnSelect: true
+      })
+    }) 
+
+    $(function () {
+      $('#select2adddept').select2()
+
+      //Initialize Select2 Elements
+      $('#select2adddept').select2({
+        theme: 'bootstrap4',
+        placeholder: 'Please Select Parent Department',
         tags: true,
         allowClear: true,
         closeOnSelect: true
@@ -149,6 +149,7 @@
 
   </script>
 
+    <!-- GET INFO -->
   <script>
     function getinfo(){
       alert(document.getElementById('prev_img').files[0].name);
@@ -178,6 +179,7 @@
   </script>
 
 
+    <!-- DELETE DATA ALL -->
   <script>
     var Toast = Swal.mixin({
         toast: true,
@@ -186,52 +188,44 @@
         timer: 3500
       });
     function deleteData(table_name, delete_id){
+      var loc = "controllers/DeleteController.php?action=delete&delete_id=" + delete_id + "&table="+table_name;
       
       Swal.fire({
-          title: 'Are you sure?',
-          text: "You won't be able to revert this!",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, delete it!',
-          timer: 4000
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
       }).then((result) => {
-          if (!result.isConfirmed) {
-            alert(table_name + "\n" + delete_id);
-            var xhttp = new XMLHttpRequest();
-            xhttp.open('POST', 'controllers/DeleteController.php', true);
-            xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            xhttp.send('action=delete&delete_id='+delete_id+"&table="+table_name);
-            xhttp.onreadystatechange = function (){
-              if(this.readyState == 4 && this.status == 200){
-                if(this.responseText != ""){
-                  Toast.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    title: 'RECORD has been deleted.',
-                    showConfirmButton: false,
-                    timer: 2500
-                  })
-                }else{
-                  Swal.fire(
-                    'RECORD Not Deleted!',
-                    'RECORD has Not been deleted.',
-                    'error'
-                  )
-                }
-                if(table_name == "mentors"){
-                  setTimeout(loadPageMentor, 2400);
-                }
-                // alert(this.responseText);
-              }	
-            }
-          }
+        if ( result.dismiss === Swal.DismissReason.cancel ) {
+          Swal.fire(
+            'Cancelled',
+            'Your Record is safe &#128515',
+            'error'
+          )
+        }
+        else if (result.isConfirmed === Swal.isConfirmed) {
+          window.location = loc;
+        } 
       })
     }
 
+    function loadMain(table){
+      if(table_name == "mentors"){
+        setTimeout(loadPageMentor, 2400);
+      }
+      else if(table_name == "departments"){
+        setTimeout(loadPageDept, 2400);
+      }
+    } 
+
     function loadPageMentor(){
       window.location = "mentors.php?action=Manage";
+    }
+    function loadPageDept(){
+      window.location = "departments.php?action=Manage";
     }
   </script>
 

@@ -50,7 +50,7 @@
                 </div>
               </div>
               <div class="card-body" style="display: block;">
-                <form action="" method="POST">
+                <form action="controllers/DepartmentController.php" method="POST">
                   <div class="form-group">
                     <label for="name">Department Name</label>
                     <input type="text" name="name" class="form-control" autocomplete="off" required="required" id="name">
@@ -62,20 +62,24 @@
                   </div>
                   <div class="form-group">
                     <label>Parent Department</label>
-                    <select class="form-control w-100" id="select2adddept" name="sub_Dept" required multiple>
-                      <option value="0">No Parent Department</option>
+                    <select class="form-control w-100" id="select2adddept" name="sub_Dept" required>
+                      
+                      <option value="0">No Parent Department </option>
+                      
                       <?php
-                        $getSubSQL = "SELECT * FROM departments WHERE sub_Dept = 0";
-                        $result       = mysqli_query($db,$getSubSQL);
-                        $rowCount     = mysqli_num_rows($result);
-                        if($rowCount > 0){
-                            while($rowSub = mysqli_fetch_assoc($result)){
-                                $dept_id = $rowSub['dept_id'];
-                                $dept_title = $rowSub['dept_title'];
-                                ?>
-                                    <option value="<?=$rowSub['dept_id']?>"><?=$rowSub['dept_title']?></option>
-                                <?php
-                            }
+                        $table = 'departments';
+                        $data  = array(
+                          'where' => array(
+                            'sub_dept' => 0
+                          )
+                        );
+                        $dept_list = $db->select($table,$data);
+                        foreach($dept_list as $dpt){
+                          $dept_id = $dpt->dept_id;
+                          $dept_title = $dpt->dept_title;
+                          ?>
+                              <option value="<?=$dept_id?>"><?=$dept_title?></option>
+                          <?php
                         } 
                       ?>
                     </select>
@@ -89,6 +93,7 @@
                     </select>
                   </div>
                   <div class="form-group">
+                    <input type="hidden" name="action" value="add">
                     <input type="submit" name="addDept" class="btn btn-block btn-primary btn-flat" value="Add New Category">
                   </div>
                 </form>
@@ -97,29 +102,6 @@
             </div>
             <!-- Add New Category End -->
 
-            <?php
-              // Register New Category
-                if ( isset($_POST['addDept']) ){
-                    $name     = $_POST['name'];
-                    $desc     = $_POST['desc'];
-                    $status   = $_POST['status'];
-                    $sub_category = $_POST['sub_Dept'];
-
-                    $sql = "INSERT INTO departments (dept_title, dept_desc, sub_dept,dept_status) VALUES ('$name', '$desc', '$sub_category','$status')";
-
-                    $AddSuccess = mysqli_query($db, $sql);
-
-                    if ( $AddSuccess ){
-                        $_SESSION['message'] = "Department Added Successfully";
-                        $_SESSION['type']    = "success";
-                        header("Location: departments.php");
-                        exit();
-                    }
-                    else{
-                        die("MySQL Connection Faild." . mysqli_error($db));
-                    }
-                }
-            ?>
           </div>
 
 
@@ -130,15 +112,16 @@
             <?php
               if (isset( $_GET['edit'] )){ 
                 $editID = $_GET['edit'];
-                
-                $sql = "SELECT * FROM departments WHERE cat_id = '$editID'";
-                $editCat = mysqli_query($db, $sql);
-                while ( $row = mysqli_fetch_assoc($editCat) ) {
-                  $cat_id     = $row['cat_id'];
-                  $cat_name   = $row['cat_name'];
-                  $cat_desc   = $row['cat_desc'];
-                  $status     = $row['status'];
-                  ?>
+                $data = array(
+                  'where' => array(
+                    'dept_id' => $editID
+                  ),
+                  'return_type' => 'single'
+                );
+
+                $editCat = $db->select('departments',$data);
+
+                ?>
 
                   <div class="card">
                     <div class="card-header">
@@ -154,31 +137,33 @@
                       </div>
                     </div>
                     <div class="card-body" style="display: block;">
-                      <form action="" method="POST">
+                      <form action="controllers/DepartmentController.php" method="POST">
                         <div class="form-group">
                           <label for="name">Name</label>
-                          <input type="text" name="name" class="form-control" autocomplete="off" required="required" id="name" value="<?php echo $cat_name; ?>">
+                          <input type="text" name="name" class="form-control" autocomplete="off" required="required" id="name" value="<?php echo $editCat->dept_title; ?>">
                         </div>
                         <div class="form-group">
                           <label>Description</label>
-                          <textarea class="form-control" name="desc"><?php echo $cat_desc; ?></textarea>
+                          <textarea class="form-control" name="desc"><?php echo $editCat->dept_desc; ?></textarea>
                         </div>
                         <div class="form-group">
                           <label>Parent Category</label>
                           <select class="form-control" name="sub_category">
                             <option value="0">Please Select the Parent Category Status</option>
                             <?php
-                              $getSubCatSQL = "SELECT * FROM category WHERE sub_category = 0";
-                              $result       = mysqli_query($db,$getSubCatSQL);
-                              $rowCount     = mysqli_num_rows($result);
-                              if($rowCount > 0){
-                                  while($rowSub = mysqli_fetch_assoc($result)){
-                                  $cat_id = $rowSub['cat_id'];
-                                  $cat_name = $rowSub['cat_name'];
+                              $table = 'departments';
+                              $data  = array(
+                                'where' => array(
+                                  'sub_dept' => 0
+                                )
+                              );
+                              $dept_list = $db->select($table,$data);
+                              foreach($dept_list as $dpt){
+                                $dept_id = $dpt->dept_id;
+                                $dept_title = $dpt->dept_title;
                                 ?>
-                                  <option value='<?=$cat_id?>'><?=$cat_name?></option>"
+                                    <option value="<?=$dept_id?>" <?php if($dept_id == $editCat->sub_dept){ echo "selected";}?>><?=$dept_title?></option>
                                 <?php
-                                  }
                               } 
                             ?>
                           </select>
@@ -187,42 +172,22 @@
                           <label>Status</label>
                           <select class="form-control" name="status">
                             <option value="1">Please Select the Category Status</option>
-                            <option value="1" <?php if ( $status == 1 ){ echo 'selected'; } ?> >Active</option>
-                            <option value="0" <?php if ( $status == 0 ){ echo 'selected'; } ?> >Inactive</option>
+                            <option value="1" <?php if ( $editCat->dept_status == 1 ){ echo 'selected'; } ?> >Active</option>
+                            <option value="0" <?php if ( $editCat->dept_status == 0 ){ echo 'selected'; } ?> >Inactive</option>
                           </select>
                         </div>
                         <div class="form-group">
-                          <input type="hidden" name="updateID" value="<?php echo $cat_id; ?>">
+                          <input type="hidden" name="updateID" value="<?php echo $editCat->dept_id; ?>">
+                          <input type="hidden" name="action" value="edit">
                           <input type="submit" name="updateCategory" class="btn btn-block btn-primary btn-flat" value="Save Changes">
                         </div>
                       </form>
                     </div>
               <!-- /.card-body -->
             </div>
-              <?php  }                
-              }
+              <?php  }  
             ?>
 
-            <?php
-              // Update Category Info
-              if (isset($_POST['updateCategory'])){
-                $name     = $_POST['name'];
-                $desc     = $_POST['desc'];
-                $status   = $_POST['status'];
-                $updateID = $_POST['updateID'];
-                $sub_cat  = $_POST['sub_category'];
-                $sql = "UPDATE category SET cat_name='$name', cat_desc='$desc', status='$status',sub_category='$sub_cat' WHERE cat_id = '$updateID'";
-
-                $updateSuccess = mysqli_query($db, $sql);
-
-                if ( $updateSuccess ){
-                  header("Location: category.php");
-                }
-                else{
-                  die("MySQL Connection Faild." . mysqli_error($db));
-                }
-              }
-            ?>
             <!-- Edit Form End -->
 
 
@@ -259,27 +224,34 @@
                     </thead>
                     <tbody>
                       <?php
-                          $total_rows = $db->query("SELECT * FROM departments")->num_rows;
+                          $table = 'departments';
+                          $data  = array(
+                            'return_type' => 'count'
+                          );
+                          $total_rows = $db->select($table,$data);
 
                           $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
 
                           $rows_per_page = 10;
 
-                          if($statement = $db->prepare("SELECT * FROM departments LIMIT ?,?") ){
-                              $cal_page = ($current_page - 1) * $rows_per_page;
-                              $statement->bind_param("ii",$cal_page,$rows_per_page);
-                              $statement->execute();
-                              $allCat = $statement->get_result();
-                          }
+                          $cal_page = ($current_page - 1) * $rows_per_page;
+                          $data_lm = array(
+                            'limit' => array(
+                              '1' => $cal_page,
+                              '2' => $rows_per_page
+                            )
+                          );
+                          $allCat = $db->select($table,$data_lm);
+                              
                       ?>
                       <?php
                         $i = 0;
-                        while ( $row = mysqli_fetch_assoc($allCat) ) {
-                                $dept_id      = $row['dept_id'];
-                                $dept_title   = $row['dept_title'];
-                                $dept_desc    = $row['dept_desc'];
-                                $dept_status  = $row['dept_status'];
-                                $sub_dept     = $row['sub_dept'];
+                        foreach($allCat as $cat){
+                                $dept_id      = $cat->dept_id;
+                                $dept_title   = $cat->dept_title;
+                                $dept_desc    = $cat->dept_desc;
+                                $dept_status  = $cat->dept_status;
+                                $sub_dept     = $cat->sub_dept;
                                 $i++;
                             ?>
 
@@ -300,12 +272,14 @@
                                 <td>
                                 <?php
                                     if($sub_dept != 0){
-                                        $parentCatSql = "SELECT * FROM departments WHERE dept_id = '$sub_dept'";
-                                        $resparent    = mysqli_query($db,$parentCatSql);
-                                        while($rowParentx = mysqli_fetch_assoc($resparent)){
-                                            $subCat_name = $rowParentx['dept_title'];
-                                        }
-                                        echo $subCat_name;
+                                        $searchData = array(
+                                          'where' => array(
+                                            'dept_id' => $sub_dept
+                                          ),
+                                          'return_type' => 'single'
+                                        );
+                                        $resparent    = $db->select('departments',$searchData);
+                                        echo $resparent->dept_title;
                                     }
                                     else{
                                         echo "None";
@@ -314,18 +288,15 @@
                                 </td>
                                 
                                 <td class="project-actions">
-                                    <a class="btn btn-outline-secondary btn-sm" href="category.php?edit=<?php echo $dept_id; ?>">
-                                        <i class="fas fa-eye">
-                                        </i>
+                                    <a class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#delete<?php echo $dept_id; ?>" href="#">
+                                        <i class="fas fa-eye"></i>
                                     </a>
-                                    <a class="btn btn-outline-primary btn-sm" href="category.php?edit=<?php echo $dept_id; ?>">
-                                        <i class="fas fa-pencil-alt">
-                                        </i>
+                                    <a class="btn btn-outline-primary btn-sm" href="departments.php?edit=<?php echo $dept_id; ?>">
+                                        <i class="fas fa-pencil-alt"></i>
                                     </a>
-                                    <a class="btn btn-outline-danger btn-sm" href="#" data-toggle="modal" data-target="#delete<?php echo $dept_id; ?>">
-                                        <i class="fas fa-trash">
-                                        </i>
-                                    </a>
+                                    <button class="btn btn-outline-danger btn-sm" onclick="deleteData('departments',<?php echo $dept_id; ?>)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                       <?php  
@@ -343,7 +314,7 @@
                                 <!-- PREVIOUS BUTTON -->
                                 <?php if($current_page > 1) : ?>
                                     <li class="page-item ">
-                                        <a class="page-link" href="category.php?page=<?=($current_page-1)?>" tabindex="-1" aria-disabled="true">&laquo;</a>
+                                        <a class="page-link" href="departments.php?page=<?=($current_page-1)?>" tabindex="-1" aria-disabled="true">&laquo;</a>
                                     </li>
                                 <?php else : ?>
                                     <li class="page-item disabled">
@@ -352,27 +323,27 @@
                                 <?php endif;?>
 
                                 <?php if($current_page - 2 > 0) : ?>
-                                    <li class="page-item"><a class="page-link" href="category.php?page=<?=($current_page - 2 )?>"><?=($current_page - 2 )?></a></li>
+                                    <li class="page-item"><a class="page-link" href="departments.php?page=<?=($current_page - 2 )?>"><?=($current_page - 2 )?></a></li>
                                 <?php endif;?>
 
                                 <?php if($current_page - 1 > 0) : ?>
-                                    <li class="page-item"><a class="page-link" href="category.php?page=<?=($current_page - 1 )?>"><?=($current_page - 1 )?></a></li>
+                                    <li class="page-item"><a class="page-link" href="departments.php?page=<?=($current_page - 1 )?>"><?=($current_page - 1 )?></a></li>
                                 <?php endif;?>
 
-                                <li class="page-item active"><a class="page-link" href="category.php?page=<?=$current_page?>"><?=$current_page?></a></li>
+                                <li class="page-item active"><a class="page-link" href="departments.php?page=<?=$current_page?>"><?=$current_page?></a></li>
 
                                 <?php if($current_page + 1 < ceil($total_rows / $rows_per_page) + 1 ) : ?>
-                                    <li class="page-item"><a class="page-link" href="category.php?page=<?=($current_page + 1 )?>"><?=($current_page + 1 )?></a></li>
+                                    <li class="page-item"><a class="page-link" href="departments.php?page=<?=($current_page + 1 )?>"><?=($current_page + 1 )?></a></li>
                                 <?php endif;?>
 
                                 <?php if($current_page + 2 < ceil($total_rows / $rows_per_page) + 1 ) : ?>
-                                    <li class="page-item"><a class="page-link" href="category.php?page=<?=($current_page + 2 )?>"><?=($current_page + 2 )?></a></li>
+                                    <li class="page-item"><a class="page-link" href="departments.php?page=<?=($current_page + 2 )?>"><?=($current_page + 2 )?></a></li>
                                 <?php endif;?>
                                 
                                 <!-- NEXT BUTTON -->
                                 <?php if($current_page < ceil($total_rows / $rows_per_page)) : ?>
                                     <li class="page-item ">
-                                        <a class="page-link" href="category.php?page=<?=($current_page + 1 )?>" tabindex="-1" aria-disabled="true">&raquo;</a>
+                                        <a class="page-link" href="departments.php?page=<?=($current_page + 1 )?>" tabindex="-1" aria-disabled="true">&raquo;</a>
                                     </li>
                                 <?php else : ?>
                                     <li class="page-item disabled">

@@ -42,7 +42,17 @@
             if(array_key_exists('order_by',$data)){
                 $sql .= " ORDER BY " . $data['order_by'];
             }
-
+            
+            $lm = 0;
+            if(array_key_exists('limit',$data)){
+                $sql .= " LIMIT ";
+                foreach($data['limit'] as $key => $value){
+                    $add = ( $lm > 0 ) ? ' , ' : '';
+                    $sql .= $add . "$value";
+                    $lm++;
+                }
+            }
+            
             $query = $this->pdoCon->prepare($sql);
 
             if(array_key_exists('where',$data)){
@@ -50,6 +60,15 @@
                     $query->bindValue(":$key", $value);
                 }
             }
+
+            if(array_key_exists('limit',$data)){
+                foreach($data['limit'] as $key => $value){
+                    $query->bindValue(":$key", $value);
+                }
+            }
+
+            // var_dump($query);
+            // exit();
 
             $query->execute();
 
