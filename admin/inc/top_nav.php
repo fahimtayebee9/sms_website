@@ -37,14 +37,16 @@
                 <a href="#" class="dropdown-item">
                 <!-- Message Start -->
                 <div class="media">
-                  <img src="img/visitors/temp_image.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                  <img src="img/users/temp.png" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                   
                   <div class="media-body">
                     <h3 class="dropdown-item-title">
                       Baldev
                       <!-- <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span> -->
                     </h3>
-                    <p class="text-sm"><?=substr($rowCmt['comments'],0,30)?></p>
+                    <p class="text-sm">
+                      <!--  -->
+                    </p>
                     <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i>
                         4 days
                     </p>

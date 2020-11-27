@@ -44,11 +44,54 @@
 <script src="dist/js/adminlte.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="dist/js/pages/dashboard2.js"></script>
+
+<!-- TIME PCIKER PLUGIN -->
+<script src="plugins/MDTimePicker/mdtimepicker.min.js"></script>
 
 <!-- sweetalert2 -->
 <script src="plugins/sweetalert2/sweetalert2.min.js"></script>
+
+<!-- FILE SELECTOR PLUGIN -->
+<script src="assets/js/file-select.js"></script> 
+
+<!-- Element ADD PLUGIN -->
+<script src="assets/js/course_script.js"></script> 
+
+<!-- CKEDITOR PLUGIN -->
+<!-- <script src="plugins/ckeditor/ckeditor.js"></script> -->
+
+  <!-- CONFIGURE TIME PICKER -->
+  <script>
+    $(document).ready(function(){
+      $('#time_start').mdtimepicker(); 
+    });
+    $('#time_start').mdtimepicker({
+      timeFormat: 'hh:mm:ss.000', 
+      format: 'hh:mm tt',      
+      // 'red', 'purple', 'indigo', 'teal', 'green', 'dark'
+      theme: 'dark',        
+      readOnly: true,       
+      hourPadding: false,
+      clearBtn: false
+    }); 
+
+    $(document).ready(function(){
+      $('#time_end').mdtimepicker(); 
+    });
+    $('#time_end').mdtimepicker({
+      timeFormat: 'hh:mm:ss.000', 
+      format: 'hh:mm tt',   
+      // 'red', 'purple', 'indigo', 'teal', 'green', 'dark'
+      theme: 'dark',        
+      readOnly: true,       
+      hourPadding: false,
+      clearBtn: false
+    }); 
+
+    // $('#time_start').change(function(e){
+    //   mdtimepicker('#time_end', 'setMinTime', e.value);
+    // }); 
+  </script>
 
 
   <script>
@@ -127,12 +170,86 @@
         closeOnSelect: true
       })
     })
+
+    // COURSE PAGE
+    $(function () {
+      $('#select2stat').select2()
+
+      //Initialize Select2 Elements
+      $('#select2stat').select2({
+        theme: 'bootstrap4',
+        placeholder: 'Please Select Status',
+        tags: true,
+        allowClear: true,
+        closeOnSelect: true
+      })
+    })
+
+    $(function () {
+      $('#select2ClassDay').select2()
+
+      //Initialize Select2 Elements
+      $('#select2ClassDay').select2({
+        theme: 'bootstrap4',
+        placeholder: 'Please Select Class Day',
+        tags: true,
+        allowClear: true,
+        closeOnSelect: true
+      })
+    })
+
+    $(function () {
+      $('#select2dur').select2()
+
+      //Initialize Select2 Elements
+      $('#select2dur').select2({
+        theme: 'bootstrap4',
+        placeholder: 'Please Select Duration',
+        tags: true,
+        allowClear: true,
+        closeOnSelect: true
+      })
+    })
+
+    $(function () {
+      $('#select2mentor').select2()
+
+      //Initialize Select2 Elements
+      $('#select2mentor').select2({
+        theme: 'bootstrap4',
+        placeholder: 'Please Select Mentor',
+        tags: true,
+        allowClear: true,
+        closeOnSelect: true
+      })
+    })
+
+    $(function () {
+      $('#select2cap').select2()
+
+      //Initialize Select2 Elements
+      $('#select2cap').select2({
+        theme: 'bootstrap4',
+        placeholder: 'Please Select Capacity',
+        tags: true,
+        allowClear: true,
+        closeOnSelect: true
+      })
+    })
+
+    $(function () {
+      $('#select2hour').select2()
+
+      //Initialize Select2 Elements
+      $('#select2hour').select2({
+        theme: 'bootstrap4',
+        placeholder: 'Please Select Class Status',
+        tags: true,
+        allowClear: true,
+        closeOnSelect: true
+      })
+    })
   </script>
-
-  
-
-    <!-- FILE SELECTOR PLUGIN -->
-    <script src="assets/js/file-select.js"></script>
 
 
     <!-- GET INFO -->
@@ -328,11 +445,11 @@
   </script> -->
 
 
-  <!-- CKEDITOR PLUGIN -->
-  <script src="plugins/ckeditor/ckeditor.js"></script>
+  <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+  <script src="dist/js/pages/dashboard2.js"></script>
 
-<?php
-	ob_end_flush();
-?>
+  <?php
+    ob_end_flush();
+  ?>
 </body>
 </html>

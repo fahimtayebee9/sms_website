@@ -8,7 +8,7 @@
 
   // To check the User if Session Data found
   if ( empty( $_SESSION['email'] ) || empty( $_SESSION['password'] ) ){
-    // header("Location: index.php");
+    header("Location: index.php");
   }
   
 ?>
@@ -19,7 +19,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- <meta http-equiv="refresh" content="30;url=logout.php?time=30&action=Logout" /> -->
-  <link rel="shortcut icon" href="img/settings/<?=$web_Fav;?>" type="image/x-icon">
+  <!-- <link rel="shortcut icon" href="img/settings/<?=$web_Fav;?>" type="image/x-icon"> -->
   <title>SMSW | Dashboard</title>
 
   <!-- Google Font: Source Sans Pro -->
@@ -47,11 +47,17 @@
   <link rel="stylesheet" href="plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
   <!-- summernote -->
   <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
+
+
+  <!-- TIME PCIKER PLUGIN -->
+  <link rel="stylesheet" href="plugins/MDTimePicker/mdtimepicker.min.css">
+
+
   <!-- Theme style -->
-  <link rel="stylesheet" href="dist/css/style.css">
+  <!-- <link rel="stylesheet" href="dist/css/style.css"> -->
   <!-- SWEET ALERT 2 -->
-  <script src="../assets/js/toastr.min.js"></script>
-  <link rel="stylesheet" href="../assets/css/toastr.min.css">  
+  <!-- <script src="../assets/js/toastr.min.js"></script> -->
+  <!-- <link rel="stylesheet" href="../assets/css/toastr.min.css">   -->
 
   <link rel="stylesheet" href="plugins/sweetalert2/sweetalert2.min.css">  
 
@@ -70,6 +76,9 @@
       height: 50px;
       width: 50px;
       border-radius: 50%;
+    }
+    .sidebar-navy{
+      background-color: #001429!important;
     }
   </style>
 

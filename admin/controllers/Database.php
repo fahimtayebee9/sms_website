@@ -27,7 +27,21 @@
             // $value = null;
             $sql  = "SELECT ";
             $sql .= array_key_exists("select", $data) ? $data['select'] : "*";
+
+            if(array_key_exists('as',$data)){
+                $sql .= " AS " . $data['as'];
+            }
+
             $sql .= " FROM $table";
+
+            // $lm = 0;
+            // if(array_key_exists('inner_join',$data)){
+            //     foreach($data['inner_join'] as $key => $value){
+            //         $sql .= " INNER JOIN " . $key . " ON " . " :";
+            //         $sql .= "$value";
+            //         $lm++;
+            //     }
+            // }
 
             if(array_key_exists('where',$data)){
                 $sql .= " WHERE ";
@@ -43,15 +57,16 @@
                 $sql .= " ORDER BY " . $data['order_by'];
             }
             
-            $lm = 0;
             if(array_key_exists('limit',$data)){
                 $sql .= " LIMIT ";
+                $lm = 0;
                 foreach($data['limit'] as $key => $value){
                     $add = ( $lm > 0 ) ? ' , ' : '';
                     $sql .= $add . "$value";
                     $lm++;
                 }
             }
+
             
             $query = $this->pdoCon->prepare($sql);
 
@@ -77,6 +92,13 @@
                 switch($data['return_type']){
                     case "count":
                         $value = $query->rowCount();
+                    break;
+                    case "count_col":
+                        $value = $query->columnCount();
+                    break;
+                    case "column":
+                        $col_no = array_key_exists('col_no',$data) ? $data['col_no'] : "";
+                        $value = $query->fetchColumn($col_no);
                     break;
                     case "single":
                         $value = $query->fetch(PDO::FETCH_OBJ);

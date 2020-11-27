@@ -132,7 +132,8 @@
 
                     <div class="chart">
                       <!-- Sales Chart Canvas -->
-                      <canvas id="salesChart" height="180" style="height: 180px;"></canvas>
+                      <!-- <canvas id="salesChart" height="180" style="height: 180px;"></canvas> -->
+                      <canvas id="revenue-chart-canvas" height="300" style="height: 300px;"></canvas>
                     </div>
                     <!-- /.chart-responsive -->
                   </div>
