@@ -100,8 +100,14 @@
                         $col_no = array_key_exists('col_no',$data) ? $data['col_no'] : "";
                         $value = $query->fetchColumn($col_no);
                     break;
+                    case "column_name":
+                        $value = $query->fetch(PDO::FETCH_COLUMN);
+                    break;
                     case "single":
                         $value = $query->fetch(PDO::FETCH_OBJ);
+                    break;
+                    case "all":
+                        $value = $query->fetchAll(PDO::FETCH_ASSOC);
                     break;
                     default:
                         $value = ""; 

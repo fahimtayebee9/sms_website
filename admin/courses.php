@@ -188,7 +188,7 @@
                                                                             <i class="fas fa-pencil-alt">
                                                                             </i>
                                                                         </a>
-                                                                        <button class="btn btn-outline-danger btn-sm" onclick="deleteData(<?php echo $crs->crs_id; ?>)">
+                                                                        <button class="btn btn-outline-danger btn-sm" onclick="deleteData('courses','<?php echo $crs->crs_id .'_'.$crs->curriculam_id; ?>')">
                                                                             <i class="fas fa-trash">
                                                                             </i>
                                                                         </button>
@@ -416,53 +416,244 @@
             <?php
         }
         else if($action == "Edit"){
-            ?>
-                <!-- Content Wrapper. Contains page content -->
-                <div class="content-wrapper">
-                    <!-- Content Header (Page header) -->
-                    <div class="content-header">
-                        <div class="container-fluid">
-                            <div class="row mb-2">
-                                <div class="col-sm-6">
-                                    <h1 class="m-0 text-dark">Manage Courses</h1>
-                                </div><!-- /.col -->
-                                <div class="col-sm-6">
-                                    <ol class="breadcrumb float-sm-right">
-                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                    <li class="breadcrumb-item active">All Courses</li>
-                                    </ol>
-                                </div><!-- /.col -->
-                            </div><!-- /.row -->
-                        </div><!-- /.container-fluid -->
-                    </div>
-                    <!-- /.content-header -->
+            $edit_id = isset($_GET['edit_id']) ? $_GET['edit_id'] : "";
+            if( !empty( $edit_id )){
+                ?>
+                    <!-- Content Wrapper. Contains page content -->
+                    <div class="content-wrapper">
+                        <!-- Content Header (Page header) -->
+                        <div class="content-header">
+                            <div class="container-fluid">
+                                <div class="row mb-2">
+                                    <div class="col-sm-6">
+                                        <h1 class="m-0 text-dark">Manage Courses</h1>
+                                    </div><!-- /.col -->
+                                    <div class="col-sm-6">
+                                        <ol class="breadcrumb float-sm-right">
+                                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                        <li class="breadcrumb-item active">All Courses</li>
+                                        </ol>
+                                    </div><!-- /.col -->
+                                </div><!-- /.row -->
+                            </div><!-- /.container-fluid -->
+                        </div>
+                        <!-- /.content-header -->
 
-                    <!-- Main content -->
-                    <section class="content">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="card">
-                                        <div class="card-header bg-navy color-palette">
-                                            <h4 class="card-title font-weight-bold text-center float-none">Edit Course</h4>
-                                        </div>
-                                        <!-- /.card-header -->
-                                        <div class="card-body table-responsive p-0">
-                                            <div class="container-fluid">
-                                                <div class="row">
+                        <!-- Main content -->
+                        <section class="content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="card">
+                                            <div class="card-header bg-navy color-palette">
+                                                <h4 class="card-title font-weight-bold text-center float-none">Edit Course</h4>
+                                            </div>
+                                            <!-- /.card-header -->
+                                            <div class="card-body table-responsive">
+                                                <?php
+                                                    $data_crList = array(
+                                                        'where' => array(
+                                                            'crs_id' => $edit_id
+                                                        ),
+                                                        'return_type' => 'single'
+                                                    );
+                                                    $table_last = 'courses';
+                                                    $cur_edit = $db->select($table_last, $data_crList);
+                                                ?>
+                                                <form role="form" action="controllers/CourseController.php" method="POST">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="exampleInputEmail1">Course ID</label>
+                                                                <input type="text" class="form-control " disabled name="" value="<?=$cur_edit->crs_customID?>">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="exampleInputEmail1">Title</label>
+                                                                <input type="text" class="form-control" name="crs_title" placeholder="Enter Title" value="<?=$cur_edit->crs_title?>">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="">Course FEE</label>
+                                                                <input type="text" class="form-control" name="crs_fee" placeholder="Enter FEE" value="<?=$cur_edit->crs_fee?>">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="">Class Time (Start)</label>
+                                                                <input type="text" class="form-control" id="time_start" name="crs_time_start" placeholder="Enter Class Start Time" value="<?=date("h:i A", strtotime($cur_edit->crs_time_start))?>">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="">Class Time (End)</label>
+                                                                <input type="text" class="form-control" id="time_end" name="crs_time_end" placeholder="Enter Class End Time" value="<?=date("h:i A", strtotime($cur_edit->crs_time_end))?>">
+                                                            </div>
 
-                                                </div>
+                                                            <div class="form-group">
+                                                                <label for="exampleInputPassword1">Status</label>
+                                                                <select name="crs_status" id="select2stat" class="form-control" >
+                                                                    <option value="">Please Select Status</option>
+                                                                    <option value="1" <?php if($cur_edit->crs_status == 1){echo "selected";}?> >Active</option>
+                                                                    <option value="0" <?php if($cur_edit->crs_status == 0){echo "selected";}?>>Inactive</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="exampleInputPassword1">Set Curriculam</label>
+                                                                <select name="curriculam_id" id="select2curId" class="form-control">
+                                                                    <option value="">Please Select Status</option>
+                                                                    <?php
+                                                                        $data_cur = array(
+                                                                            'order_by' => 'cur_id DESC',
+                                                                            'return_type' => 'all'
+                                                                        );
+                                                                        $data_colName = array(
+                                                                            'where' => array(
+                                                                                'table_name' => 'curriculams'
+                                                                            )
+                                                                        );
+                                                                        $cur_list = $db->select('curriculams',$data_cur);
+                                                                        $col_list = $db->select('information_schema.columns',$data_colName);
+                                                                        foreach($cur_list as $cur){
+                                                                            $cur_sessions = '';
+                                                                            $cr_cn = 0;
+                                                                            foreach($col_list as $col){
+                                                                                if(strpos($col->COLUMN_NAME, 'title') !== false){
+                                                                                    $add = ( $cr_cn > 0 && !empty( $cur[$col->COLUMN_NAME] )) ? ' , ' : '';
+                                                                                    $cur_sessions .=  $add . $cur[$col->COLUMN_NAME] ;
+                                                                                    $cr_cn++;
+                                                                                }
+                                                                            }
+                                                                            ?>
+                                                                                <option value="<?=$cur['cur_id']?>" <?php if($cur_edit->curriculam_id == $cur['cur_id']){echo "selected";}?>  ><?=$cur_sessions?></option>
+                                                                            <?php
+                                                                            
+                                                                        }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="exampleInputEmail1">Class Day</label>
+                                                                <select name="crs_classDay" id="select2ClassDay" class="form-control" multiple>
+                                                                    <option value="">Please Select Day</option>
+                                                                    <option value="1" <?php if($cur_edit->crs_classDay == 1){echo "selected";}?> >Saturday</option>
+                                                                    <option value="2" <?php if($cur_edit->crs_classDay == 2){echo "selected";}?> >Sunday</option>
+                                                                    <option value="3" <?php if($cur_edit->crs_classDay == 3){echo "selected";}?> >Monday</option>
+                                                                    <option value="4" <?php if($cur_edit->crs_classDay == 4){echo "selected";}?> >Tuesday</option>
+                                                                    <option value="5" <?php if($cur_edit->crs_classDay == 5){echo "selected";}?> >Wednesday</option>
+                                                                    <option value="6" <?php if($cur_edit->crs_classDay == 6){echo "selected";}?> >Thursday</option>
+                                                                    <option value="7" <?php if($cur_edit->crs_classDay == 7){echo "selected";}?> >Friday</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="exampleInputPassword1">Course Start Date</label>
+                                                                <input type="date" class="form-control" name="cls_startDate" placeholder="Password" value="<?=$cur_edit->cls_startDate?>">
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="exampleInputPassword1">Duration</label>
+                                                                <select name="duration" id="select2dur" class="form-control">
+                                                                    <option value="">Please Select Duration</option>
+                                                                    <option value="1" <?php if($cur_edit->duration == 1){echo "selected";}?> >1 Month</option>
+                                                                    <option value="2" <?php if($cur_edit->duration == 2){echo "selected";}?> >2 Month</option>
+                                                                    <option value="3" <?php if($cur_edit->duration == 3){echo "selected";}?> >3 Month</option>
+                                                                    <option value="4" <?php if($cur_edit->duration == 4){echo "selected";}?> >4 Month</option>
+                                                                    <option value="5" <?php if($cur_edit->duration == 5){echo "selected";}?> >5 Month</option>
+                                                                    <option value="6" <?php if($cur_edit->duration == 6){echo "selected";}?> >6 Month</option>
+                                                                    <option value="7" <?php if($cur_edit->duration == 7){echo "selected";}?> >7 Month</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="exampleInputPassword1">Assign Mentor</label>
+                                                                <select name="mentor_FK" id="select2mentor" class="form-control">
+                                                                    <option value="">Please Select Mentor</option>
+                                                                    <?php
+                                                                        $data_m = array(
+                                                                            'order_by' => 'mentor_id DESC'
+                                                                        ); 
+                                                                        $mentor_list = $db->select('mentors',$data_m);
+                                                                        
+                                                                        foreach($mentor_list as $mentor){
+                                                                            $data_user = array(
+                                                                                'where' => array(
+                                                                                    'id' => $mentor->user_FK
+                                                                                ),
+                                                                                'return_type' => 'single'
+                                                                            );
+                                                                            $user = $db->select('users',$data_user);
+                                                                            ?>
+                                                                                <option value="<?=$mentor->mentor_id?>" <?php if($cur_edit->mentor_FK == $mentor->mentor_id){echo "selected";}?> ><?=$user->name?></option>
+                                                                            <?php
+                                                                        }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="exampleInputPassword1">Student Capacity</label>
+                                                                <select name="student_capacity" id="select2cap" class="form-control">
+                                                                    <option value="">Please Select Capacity</option>
+                                                                    <option value="10" <?php if($cur_edit->student_capacity == 10){echo "selected";}?> >10</option>
+                                                                    <option value="20" <?php if($cur_edit->student_capacity == 20){echo "selected";}?> >20</option>
+                                                                    <option value="30" <?php if($cur_edit->student_capacity == 30){echo "selected";}?> >30</option>
+                                                                    <option value="40" <?php if($cur_edit->student_capacity == 40){echo "selected";}?> >40</option>
+                                                                    <option value="50" <?php if($cur_edit->student_capacity == 50){echo "selected";}?> >50</option>
+                                                                    <option value="60" <?php if($cur_edit->student_capacity == 60){echo "selected";}?> >60</option>
+                                                                    <option value="70" <?php if($cur_edit->student_capacity == 70){echo "selected";}?> >70</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="exampleInputPassword1">Class Hour (Offline / Online)</label>
+                                                                <select name="crs_onOff" id="select2hour" class="form-control">
+                                                                    <option value="">Please Select Status</option>
+                                                                    <option value="0" <?php if($cur_edit->crs_onOff == 0){echo "selected";}?> >Offline</option>
+                                                                    <option value="1" <?php if($cur_edit->crs_onOff == 1){echo "selected";}?> >Online</option>
+                                                                </select>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <label for="">Course Description</label>
+                                                            <textarea class="textarea" name="crs_desc" placeholder="Place some text here" style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid rgb(221, 221, 221); padding: 10px; display: none;">
+                                                                <?=$cur_edit->crs_desc?>
+                                                            </textarea>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label for="" class="d-block">Add Mew Curriculum</label>
+                                                                <button type="button" class="btn btn-outline-secondary" id="addnewSession"> <i class="fas fa-plus pr-2"></i>Add New Curriculum Session</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="row field_area" id="field_area">
+                                                                
+                                                            </div>
+                                                            <div class="row text_area" id="text_area">
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 m-auto">
+                                                            <div class="form-group">
+                                                                <input type="hidden" name="action" value="edit">
+                                                                <input type="hidden" name="crs_customID" value="<?=$cur_edit->crs_customID?>">
+                                                                <input type="hidden" name="crs_id" value="<?=$cur_edit->crs_id?>">
+                                                                <button type="submit" id="add_course" class="btn btn-info form-control" name="addCourse">ADD COURSE</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
-                    <!-- /.content -->
-                </div>
-                <!-- /.content-wrapper -->
-            <?php
+                        </section>
+                        <!-- /.content -->
+                    </div>
+                    <!-- /.content-wrapper -->
+                <?php
+            }
         }
         else if($action == "View"){
             if(isset($_GET['view_id'])){
@@ -553,27 +744,35 @@
                                                                             <td class="font-weight-bold">Class Day</td>
                                                                             <td>
                                                                                 <?php
-                                                                                    if($crs_info->crs_classDay == 1){
-                                                                                        echo $bangDATE[count($bangDATE)-7];
-                                                                                    }  
-                                                                                    else if($crs_info->crs_classDay == 2){
-                                                                                        echo $bangDATE[count($bangDATE)-6];
-                                                                                    } 
-                                                                                    else if($crs_info->crs_classDay == 3){
-                                                                                        echo $bangDATE[count($bangDATE)-5];
+                                                                                    $day_arr = explode(',',$crs_info->crs_classDay);
+                                                                                    $cn = 0;
+                                                                                    $day_str = "";
+                                                                                    foreach($day_arr as $day){
+                                                                                        $add = ( $cn > 0 ) ? ' , ' : '';  
+                                                                                        if($day == 1){
+                                                                                            $day_str .=  $add .substr($bangDATE[count($bangDATE)-7] , 0 , 9);
+                                                                                        }  
+                                                                                        else if($day == 2){
+                                                                                            $day_str .= $add . substr($bangDATE[count($bangDATE)-6] , 0 , 9);
+                                                                                        } 
+                                                                                        else if($day == 3){
+                                                                                            $day_str .= $add . substr($bangDATE[count($bangDATE)-5] , 0 , 9);
+                                                                                        }
+                                                                                        else if($day == 4){
+                                                                                            $day_str .= $add . substr($bangDATE[count($bangDATE)-4] , 0 , 15);
+                                                                                        }
+                                                                                        else if($day == 5){
+                                                                                            $day_str .= $add . substr($bangDATE[count($bangDATE)-3] , 0 , 23) ;
+                                                                                        }
+                                                                                        else if($day == 6){
+                                                                                            $day_str .= $add . substr($bangDATE[count($bangDATE)-2] , 0 , 24);
+                                                                                        }
+                                                                                        else if($day  == 7){
+                                                                                            $day_str .= $add . substr(end($bangDATE) , 0 , 15);
+                                                                                        }
+                                                                                        $cn++;
                                                                                     }
-                                                                                    else if($crs_info->crs_classDay == 4){
-                                                                                        echo $bangDATE[count($bangDATE)-4];
-                                                                                    }
-                                                                                    else if($crs_info->crs_classDay == 5){
-                                                                                        echo $bangDATE[count($bangDATE)-3];
-                                                                                    }
-                                                                                    else if($crs_info->crs_classDay == 6){
-                                                                                        echo $bangDATE[count($bangDATE)-2];
-                                                                                    }
-                                                                                    else if($crs_info->crs_classDay  == 7){
-                                                                                        echo end($bangDATE);
-                                                                                    }
+                                                                                    echo $day_str;
                                                                                 ?>
                                                                             </td>
                                                                         </tr>
@@ -726,13 +925,48 @@
 
                                                                                                     $session_elapsed = ( $cn > 1 ) ? $session_elapsed + $duration_session : 0;
                                                                                                     $prev_total_session = ( $cn > 2 ) ? $session_elapsed - $duration_session : 0;
-                                                                                                    $next_percentage = ( $cn > 1 && $session_elapsed > $month && $prev_total_session < $month) ? ( number_format( ( $month * 100 ),2)) : 0;
+                                                                                                    $percentage = number_format( ( $month * 100 ),2);
+                                                                                                    $prev_percent = ( $percentage > 100 ) ? $percentage - 100 : 0;
+                                                                                                    $prev_next    = ( $prev_percent > 100 ) ? $prev_percent - 100 : 0;
+                                                                                                    $zero_percent = ( $session_elapsed > $month && $prev_total_session < $month ) ? 0 : 0;
+                                                                                                    if(($percentage > 100 && $cn == 2) || ($percentage > 200  && $cn == 4) || ($percentage > 300  && $cn == 6)){
+                                                                                                        ?>      
+                                                                                                                <div class="progress progress-xs">
+                                                                                                                    <div class="progress-bar progress-bar-danger" style="width: 100%"></div>
+                                                                                                                </div>
+                                                                                                            </td>
+                                                                                                            <td><span class="badge bg-info">100%</span></td>
+                                                                                                        <?php
+                                                                                                    }
+                                                                                                    else if($prev_percent < 100 && $cn == 4){
+                                                                                                        ?>
+                                                                                                                <div class="progress progress-xs">
+                                                                                                                    <div class="progress-bar progress-bar-danger" style="width: <?=$prev_percent?>%"></div>
+                                                                                                                </div>
+                                                                                                            </td>
+                                                                                                            <td><span class="badge bg-info"><?=$prev_percent?>%</span></td>
+                                                                                                        <?php
+                                                                                                    }
+                                                                                                    else if($prev_next < 100 && $prev_next > 0 && $cn == 6){
+                                                                                                        ?>
+                                                                                                                <div class="progress progress-xs">
+                                                                                                                    <div class="progress-bar progress-bar-danger" style="width: 100%"></div>
+                                                                                                                </div>
+                                                                                                            </td>
+                                                                                                            <td><span class="badge bg-info">100%</span></td>
+                                                                                                        <?php
+                                                                                                    }
+                                                                                                    else{
+                                                                                                        ?>
+                                                                                                                <div class="progress progress-xs">
+                                                                                                                    <div class="progress-bar progress-bar-danger" style="width: <?=$zero_percent?>%"></div>
+                                                                                                                </div>
+                                                                                                            </td>
+                                                                                                            <td><span class="badge bg-info"><?=$zero_percent?>%</span></td>
+                                                                                                        <?php
+                                                                                                    }
                                                                                                 ?>
-                                                                                                <div class="progress progress-xs">
-                                                                                                    <div class="progress-bar progress-bar-danger" style="width: <?=$next_percentage?>%"></div>
-                                                                                                </div>
-                                                                                            </td>
-                                                                                            <td><span class="badge bg-info"><?=$next_percentage?>%</span></td>
+                                                                                                
                                                                                         </tr>
                                                                                     <?php
                                                                                     $sl++;

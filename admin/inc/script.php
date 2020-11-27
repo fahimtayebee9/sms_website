@@ -249,6 +249,19 @@
         closeOnSelect: true
       })
     })
+
+    $(function () {
+      $('#select2curId').select2()
+
+      //Initialize Select2 Elements
+      $('#select2curId').select2({
+        theme: 'bootstrap4',
+        placeholder: 'Please Select Curriculum',
+        tags: true,
+        allowClear: true,
+        closeOnSelect: true
+      })
+    })
   </script>
 
 
@@ -291,45 +304,62 @@
         timer: 3500
       });
     function deleteData(table_name, delete_id){
-      var loc = "controllers/DeleteController.php?action=delete&delete_id=" + delete_id + "&table="+table_name;
+      if(delete_id.includes('_')){
+        var del_idArr = delete_id.split('_');
+        Swal.fire({
+          title: 'Do You Want To Delete Both Curriculum And Course?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete Both!'
+        }).then((result) => {
+          if ( result.dismiss === Swal.DismissReason.cancel ) {
+            var loc = "controllers/DeleteController.php?action=delete&delete_id=" + del_idArr[0] + "&table="+table_name;
+            window.location = loc;
+          }
+          else if (result.isConfirmed === Swal.isConfirmed) {
+            var loc_2 = "controllers/DeleteController.php?action=delete&delete_id=" + del_idArr[0] + "&table="+table_name+"&del_msg=true&cur_id="+del_idArr[1];
+            window.location = loc_2;
+          } 
+        })
+      }
       
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-      }).then((result) => {
-        if ( result.dismiss === Swal.DismissReason.cancel ) {
-          Swal.fire(
-            'Cancelled',
-            'Your Record is safe &#128515',
-            'error'
-          )
-        }
-        else if (result.isConfirmed === Swal.isConfirmed) {
-          window.location = loc;
-        } 
-      })
     }
 
-    function loadMain(table){
-      if(table_name == "mentors"){
-        setTimeout(loadPageMentor, 2400);
-      }
-      else if(table_name == "departments"){
-        setTimeout(loadPageDept, 2400);
-      }
-    } 
+  </script>
 
-    function loadPageMentor(){
-      window.location = "mentors.php?action=Manage";
-    }
-    function loadPageDept(){
-      window.location = "departments.php?action=Manage";
-    }
+  <!-- DELETE CURRICULUMS CONFIRMATION -->
+  <script>
+    <?php
+      if(isset( $_SESSION['confirm_del'] )){
+        ?>
+          var loc = "controllers/DeleteController.php?action=delete&delete_id=" + <?=$_SESSION['cur_delete']?> + "&table=curriculams";
+          Swal.fire({
+            title: 'Are you sure?',
+            text: "<?=$_SESSION['confirm_del']?>",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if ( result.dismiss === Swal.DismissReason.cancel ) {
+              Swal.fire(
+                'Cancelled',
+                'Your Record is safe &#128515',
+                'error'
+              )
+            }
+            else if (result.isConfirmed === Swal.isConfirmed) {
+              window.location = loc;
+            } 
+          })
+        <?php
+        unset($_SESSION['confirm_del'],$_SESSION['cur_delete'],$_SESSION['type']);
+      }
+    ?>
   </script>
 
   <!-- TEXT AREA -->
