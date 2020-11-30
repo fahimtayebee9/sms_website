@@ -388,10 +388,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-12">
-                                                        <div class="row field_area" id="field_area">
-                                                            
-                                                        </div>
-                                                        <div class="row text_area" id="text_area">
+                                                        <div id='curriculum_data'>
                                                             
                                                         </div>
                                                     </div>
