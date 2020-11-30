@@ -105,174 +105,10 @@
     } );
   </script>
 
-  <script>
+  <!-- ALL SELECT2 BOX INITIALIZATIONS -->
+  <script src="assets/js/select2-initialization.js">
 
-    // MENTOR ADD DEPT
-    $(function () {
-      $('#select2dept').select2()
-
-      //Initialize Select2 Elements
-      $('#select2dept').select2({
-        theme: 'bootstrap4',
-        placeholder: 'Please Select the Parent Department',
-        tags: true,
-        allowClear: true,
-        closeOnSelect: true
-      })
-    })
-
-    // MENTOR ADD DEPT
-    $(function () {
-      $('#select2crs').select2()
-
-      //Initialize Select2 Elements
-      $('#select2crs').select2({
-        theme: 'bootstrap4',
-        placeholder: {
-          id: '', // the value of the option
-          text: 'Please Select Course'
-        },
-        allowClear: true,
-        tags: true,
-        closeOnSelect: true
-      })
-    })
-
-    // MENTOR ADD DEPT
-    $(function () {
-      $('#select2status').select2()
-
-      //Initialize Select2 Elements
-      $('#select2status').select2({
-        theme: 'bootstrap4',
-        placeholder: {
-          id: '', // the value of the option
-          text: 'Please Select Status'
-        },
-        allowClear: true,
-        tags: true,
-        closeOnSelect: true
-      })
-    })
-
-    // MENTOR ADD SKILLS
-    $(function () {
-      $('#select2skills').select2()
-
-      //Initialize Select2 Elements
-      $('#select2skills').select2({
-        theme: 'bootstrap4',
-        placeholder: 'Please Select Skills',
-        tags: true,
-        allowClear: true,
-        closeOnSelect: true
-      })
-    }) 
-
-    $(function () {
-      $('#select2adddept').select2()
-
-      //Initialize Select2 Elements
-      $('#select2adddept').select2({
-        theme: 'bootstrap4',
-        placeholder: 'Please Select Parent Department',
-        tags: true,
-        allowClear: true,
-        closeOnSelect: true
-      })
-    })
-
-    // COURSE PAGE
-    $(function () {
-      $('#select2stat').select2()
-
-      //Initialize Select2 Elements
-      $('#select2stat').select2({
-        theme: 'bootstrap4',
-        placeholder: 'Please Select Status',
-        tags: true,
-        allowClear: true,
-        closeOnSelect: true
-      })
-    })
-
-    $(function () {
-      $('#select2ClassDay').select2()
-
-      //Initialize Select2 Elements
-      $('#select2ClassDay').select2({
-        theme: 'bootstrap4',
-        placeholder: 'Please Select Class Day',
-        tags: true,
-        allowClear: true,
-        closeOnSelect: true
-      })
-    })
-
-    $(function () {
-      $('#select2dur').select2()
-
-      //Initialize Select2 Elements
-      $('#select2dur').select2({
-        theme: 'bootstrap4',
-        placeholder: 'Please Select Duration',
-        tags: true,
-        allowClear: true,
-        closeOnSelect: true
-      })
-    })
-
-    $(function () {
-      $('#select2mentor').select2()
-
-      //Initialize Select2 Elements
-      $('#select2mentor').select2({
-        theme: 'bootstrap4',
-        placeholder: 'Please Select Mentor',
-        tags: true,
-        allowClear: true,
-        closeOnSelect: true
-      })
-    })
-
-    $(function () {
-      $('#select2cap').select2()
-
-      //Initialize Select2 Elements
-      $('#select2cap').select2({
-        theme: 'bootstrap4',
-        placeholder: 'Please Select Capacity',
-        tags: true,
-        allowClear: true,
-        closeOnSelect: true
-      })
-    })
-
-    $(function () {
-      $('#select2hour').select2()
-
-      //Initialize Select2 Elements
-      $('#select2hour').select2({
-        theme: 'bootstrap4',
-        placeholder: 'Please Select Class Status',
-        tags: true,
-        allowClear: true,
-        closeOnSelect: true
-      })
-    })
-
-    $(function () {
-      $('#select2curId').select2()
-
-      //Initialize Select2 Elements
-      $('#select2curId').select2({
-        theme: 'bootstrap4',
-        placeholder: 'Please Select Curriculum',
-        tags: true,
-        allowClear: true,
-        closeOnSelect: true
-      })
-    })
+    
   </script>
 
 
@@ -315,7 +151,30 @@
         timer: 3500
       });
     function deleteData(table_name, delete_id){
-      if(delete_id.includes('_')){
+      if(!delete_id.includes('_')){
+        Swal.fire({
+          title: 'Do You Want To Delete?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete!'
+        }).then((result) => {
+          if ( result.dismiss === Swal.DismissReason.cancel ) {
+            Swal.fire(
+              'Cancelled',
+              'Your Record is safe &#128515',
+              'error'
+            )
+          }
+          else if (result.isConfirmed === Swal.isConfirmed) {
+            var loc_2 = "controllers/DeleteController.php?action=delete&delete_id=" + delete_id + "&table="+table_name;
+            window.location = loc_2;
+          } 
+        })
+      }
+      else if(delete_id.includes('_')){
         var del_idArr = delete_id.split('_');
         Swal.fire({
           title: 'Do You Want To Delete Both Curriculum And Course?',
@@ -335,8 +194,8 @@
             window.location = loc_2;
           } 
         })
+        
       }
-      
     }
 
   </script>
@@ -378,58 +237,64 @@
     $(function () {
       $('.textarea').summernote()
     })
+    $(function () {
+      $('.web_desc').summernote()
+    })
+    $(function () {
+      $('.textarea').summernote()
+    })
   </script>
 
-    <!-- FORM VALIDATION MENTOR ADD -->
-    <script>
-      function validateEmail(){
-        if(document.getElementById('email').value.includes('@gmail.com') || document.getElementById('email').value.includes('@yahoo.com')){
-          document.getElementById('email').classList.remove('is-invalid');
-          document.getElementById('email').classList.add('is-valid');
-        }
-        else if(!document.getElementById('email').value.includes('@gmail.com') || !document.getElementById('email').value.includes('@yahoo.com')){
-          document.getElementById('email').classList.add('is-invalid');
-        }
+  <!-- FORM VALIDATION MENTOR ADD -->
+  <script>
+    function validateEmail(){
+      if(document.getElementById('email').value.includes('@gmail.com') || document.getElementById('email').value.includes('@yahoo.com')){
+        document.getElementById('email').classList.remove('is-invalid');
+        document.getElementById('email').classList.add('is-valid');
       }
-    </script>
+      else if(!document.getElementById('email').value.includes('@gmail.com') || !document.getElementById('email').value.includes('@yahoo.com')){
+        document.getElementById('email').classList.add('is-invalid');
+      }
+    }
+  </script>
 
-    <script>
-      // Check 
-      var Toast = Swal.mixin({
-        toast: true,
-        // position: 'top-end',
-        showConfirmButton: false,
-        timer: 3500
-      });
+  <script>
+    // Check 
+    var Toast = Swal.mixin({
+      toast: true,
+      // position: 'top-end',
+      showConfirmButton: false,
+      timer: 3500
+    });
 
-      <?php
-        if(isset($_SESSION['img_err'])){
-              ?>
-                Toast.fire({
-                  position: 'top-end',
-                  icon: 'error',
-                  title: '<?=$_SESSION['img_err']?>',
-                  showConfirmButton: false,
-                  timer: 3500
-                })
-              <?php
-          unset($_SESSION['img_err']);
-        }
+    <?php
+      if(isset($_SESSION['img_err'])){
+            ?>
+              Toast.fire({
+                position: 'top-end',
+                icon: 'error',
+                title: '<?=$_SESSION['img_err']?>',
+                showConfirmButton: false,
+                timer: 3500
+              })
+            <?php
+        unset($_SESSION['img_err']);
+      }
 
-        if(isset($_SESSION['img_name'])){
-          ?>
-            Toast.fire({
-              position: 'top-end',
-              icon: 'error',
-              title: '<?=$_SESSION['img_name']?>',
-              showConfirmButton: false,
-              timer: 3500
-            })
-          <?php
-          unset($_SESSION['img_name']);
-        }
-      ?>
-    </script>
+      if(isset($_SESSION['img_name'])){
+        ?>
+          Toast.fire({
+            position: 'top-end',
+            icon: 'error',
+            title: '<?=$_SESSION['img_name']?>',
+            showConfirmButton: false,
+            timer: 3500
+          })
+        <?php
+        unset($_SESSION['img_name']);
+      }
+    ?>
+  </script>
 
     <!-- TAKE ACTION -->
     <script>

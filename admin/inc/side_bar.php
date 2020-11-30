@@ -25,10 +25,10 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="img/users/<?=$image?>" class="img-circle elevation-2" alt="User Image">
+          <img src="img/users/<?=$image?>" class="img-circle img-circle-main elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="profile.php" class="d-block"><?=$user->name?></a>
+          <a href="profile.php?view_id=<?=$user->id?>" class="d-block"><?=$user->name?></a>
         </div>
       </div>
 

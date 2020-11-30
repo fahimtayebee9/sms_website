@@ -10,6 +10,13 @@
   if ( empty( $_SESSION['email'] ) || empty( $_SESSION['password'] ) ){
     header("Location: index.php");
   }
+  $data_web = array(
+    'where' =>array(
+      'web_id' => 1
+    ),
+    'return_type' => 'single'
+  );
+  $webinfo = $db->select('web_info',$data_web);
   
 ?>
 
@@ -55,6 +62,8 @@
   <!-- TIME PCIKER PLUGIN -->
   <link rel="stylesheet" href="plugins/MDTimePicker/mdtimepicker.min.css">
 
+  <!-- MicroToolTip -->
+  <link rel="stylesheet" href="plugins/microtip/microtip.min.css">
 
   <!-- Theme style -->
   <!-- <link rel="stylesheet" href="dist/css/style.css"> -->

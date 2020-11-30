@@ -294,7 +294,7 @@
                                     <a class="btn btn-outline-primary btn-sm" href="departments.php?edit=<?php echo $dept_id; ?>">
                                         <i class="fas fa-pencil-alt"></i>
                                     </a>
-                                    <button class="btn btn-outline-danger btn-sm" onclick="deleteData('departments',<?php echo $dept_id; ?>)">
+                                    <button class="btn btn-outline-danger btn-sm" onclick="deleteData('departments','<?php echo $dept_id; ?>')">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
