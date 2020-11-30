@@ -93,6 +93,17 @@
     // }); 
   </script>
 
+  <!-- DATA TABLE INSTALLATION -->
+  <script>
+    $(document).ready(function() {
+        $('#example1').DataTable( {
+            order: [[1, 'desc']],
+            rowGroup: {
+                dataSrc: 1
+            }
+        } );
+    } );
+  </script>
 
   <script>
 

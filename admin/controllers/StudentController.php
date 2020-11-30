@@ -75,8 +75,6 @@
                             'return_type'   => 'single'
                         );
 
-                        $userData = $db->select($table, $select_data);
-
                         $select_Crs = array(
                             'where' => array(
                                 'crs_id' => $_POST['role']
@@ -86,24 +84,44 @@
 
                         $crs_data    = $db->select('courses',$select_Crs);
 
+                        $userData = $db->select($table, $select_data);
+
                         // CALCULATING AMOUNT
-                        $due_amount  = 0;
-                        $paid_amount = 0;
-                        $payment_date = NULL;
-                        if(!empty($_POST['paid_amount'])){
+                        $std_data = array();
+
+                        if(!empty($_POST['paid_amount']) && !empty($_POST['current_crs'])){
+                            $select_Crs = array(
+                                'where' => array(
+                                    'crs_id' => $_POST['current_crs']
+                                ),
+                                'return_type'   => 'single'
+                            ); 
+    
+                            $crs_data    = $db->select('courses',$select_Crs);
+                            
                             $paid_amount = $_POST['paid_amount'];
                             $due_amount = $crs_data->crs_fee - $_POST['paid_amount'];
-                            $payment_date = date('Y-m-d');
-                        }
 
-                        $std_data = array( //``, ``, ``, ``, ``, ``
-                            'current_crs'    => $_POST['current_crs'],
-                            'payment_date'   => $payment_date,
-                            'paid_amount'    => $paid_amount,
-                            'due_amount'     => $due_amount,
-                            'completed_crs'  => "",
-                            'user_FK'        => $userData->id
-                        );
+                            $std_data = array( 
+                                'current_crs'    => $_POST['current_crs'],
+                                'paid_amount'    => $paid_amount,
+                                'payment_date'   => date("Y-m-d"),
+                                'due_amount'     => $due_amount,
+                                'completed_crs'  => "",
+                                'user_FK'        => $userData->id
+                            );
+                        }
+                        else if( empty($_POST['paid_amount']) && !empty($_POST['current_crs'])){
+                            $std_data = array( 
+                                'current_crs'    => $_POST['current_crs'],
+                                'user_FK'        => $userData->id
+                            );
+                        }
+                        else{
+                            $std_data = array(
+                                'user_FK'        => $userData->id
+                            );
+                        }
 
                         $std_table = 'students';
 
@@ -130,12 +148,12 @@
                         'address'   => $_POST['address'],
                         'status'    => $_POST['status'],
                         'role'      => 3,
-                        'join_date' => date("y-m-d")
+                        'join_date' => date("Y-m-d")
                     );
 
                     $table = 'users';
                     $addUser = $db->insert($table, $data);
-                    
+
                     if ( $addUser ){
                         
                         $select_data = array(
@@ -149,13 +167,12 @@
                         $userData = $db->select($table, $select_data);
 
                         // CALCULATING AMOUNT
-                        $due_amount  = 0;
-                        $paid_amount = 0;
-                        $payment_date = NULL;
-                        if(!empty($_POST['current_crs'])){
+                        $std_data = array();
+
+                        if(!empty($_POST['paid_amount']) && !empty($_POST['current_crs'])){
                             $select_Crs = array(
                                 'where' => array(
-                                    'crs_id' => $_POST['role']
+                                    'crs_id' => $_POST['current_crs']
                                 ),
                                 'return_type'   => 'single'
                             ); 
@@ -164,20 +181,33 @@
                             
                             $paid_amount = $_POST['paid_amount'];
                             $due_amount = $crs_data->crs_fee - $_POST['paid_amount'];
-                            $payment_date = date('Y-m-d');
-                        }
 
-                        $std_data = array( //``, ``, ``, ``, ``, ``
-                            'current_crs'    => $_POST['current_crs'],
-                            'paid_amount'    => $paid_amount,
-                            'due_amount'     => $due_amount,
-                            'completed_crs'  => "",
-                            'user_FK'        => $userData->id
-                        );
+                            $std_data = array( 
+                                'current_crs'    => $_POST['current_crs'],
+                                'paid_amount'    => $paid_amount,
+                                'payment_date'   => date("Y-m-d"),
+                                'due_amount'     => $due_amount,
+                                'completed_crs'  => "",
+                                'user_FK'        => $userData->id
+                            );
+                        }
+                        else if( empty($_POST['paid_amount']) && !empty($_POST['current_crs'])){
+                            $std_data = array( 
+                                'current_crs'    => $_POST['current_crs'],
+                                'user_FK'        => $userData->id
+                            );
+                        }
+                        else{
+                            $std_data = array(
+                                'user_FK'        => $userData->id
+                            );
+                        }
 
                         $std_table = 'students';
 
                         $addMentor = $db->insert($std_table, $std_data);
+
+                        exit();
 
                         if($addMentor){
                             $_SESSION['message'] = "New Student Added Successfully..";

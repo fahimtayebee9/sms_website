@@ -47,7 +47,10 @@
   <link rel="stylesheet" href="plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
   <!-- summernote -->
   <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
-
+  <!-- DATA TABLE -->
+  <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css"> 
+  <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="plugins/datatables-select/ss/select.bootstrap4.min.css">
 
   <!-- TIME PCIKER PLUGIN -->
   <link rel="stylesheet" href="plugins/MDTimePicker/mdtimepicker.min.css">
