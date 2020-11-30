@@ -65,8 +65,8 @@
                                                             </thead>
                                                             <tbody>
                                                                 <?php
-                                                                    $getMentorsSql = "SELECT * FROM mentors 
-                                                                                INNER JOIN departments ON mentors.mentor_dept = departments.dept_id";
+                                                                    // $getMentorsSql = "SELECT * FROM mentors 
+                                                                    //             INNER JOIN departments ON mentors.mentor_dept = departments.dept_id";
                                                                     $count = 0;
 
                                                                     $table = "mentors";

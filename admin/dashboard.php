@@ -15,12 +15,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Dashboard v2</h1>
+            <h1 class="m-0 text-dark">Dashboard</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Dashboard v2</li>
+              <li class="breadcrumb-item active">Dashboard</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -38,10 +38,17 @@
               <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">CPU Traffic</span>
+                <span class="info-box-text">Total Available Courses</span>
                 <span class="info-box-number">
-                  10
-                  <small>%</small>
+                  <?php
+                    $data = array(
+                      'where' => array(
+                        'crs_status' => 1
+                      ),
+                      'return_type' => 'count'
+                    );
+                    echo $db->select('courses',$data);
+                  ?>
                 </span>
               </div>
               <!-- /.info-box-content -->
@@ -54,8 +61,18 @@
               <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-up"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Likes</span>
-                <span class="info-box-number">41,410</span>
+                <span class="info-box-text">Mentors</span>
+                <span class="info-box-number">
+                  <?php
+                    $data = array(
+                      'where' => array(
+                        'role' => 2
+                      ),
+                      'return_type' => 'count'
+                    );
+                    echo  $db->select('users',$data);
+                  ?>
+                </span>
               </div>
               <!-- /.info-box-content -->
             </div>
@@ -71,8 +88,18 @@
               <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Sales</span>
-                <span class="info-box-number">760</span>
+                <span class="info-box-text">Students</span>
+                <span class="info-box-number">
+                  <?php
+                    $data = array(
+                      'where' => array(
+                        'role' => 3
+                      ),
+                      'return_type' => 'count'
+                    );
+                    echo  $db->select('users',$data);
+                  ?>
+                </span>
               </div>
               <!-- /.info-box-content -->
             </div>
@@ -84,8 +111,18 @@
               <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">New Members</span>
-                <span class="info-box-number">2,000</span>
+                <span class="info-box-text">Due Payments</span>
+                <span class="info-box-number">
+                  <?php
+                    $data = array(
+                      'where' => array(
+                        'paid_amount' => NULL
+                      ),
+                      'return_type' => 'count'
+                    );
+                    echo  $db->select('students',$data);
+                  ?>
+                </span>
               </div>
               <!-- /.info-box-content -->
             </div>
