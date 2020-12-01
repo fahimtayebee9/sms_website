@@ -180,7 +180,7 @@
             header("location: admin/dashboard.php");
             exit();
           }
-          else if($user->role == 1 && $user->status == 1){
+          else if($user->role == 2 && $user->status == 1){
             $_SESSION['user_id']  = $user->id;
             $_SESSION['name']     = $user->name;
             $_SESSION['email']    = $user->email;
@@ -197,7 +197,23 @@
             header("location: mentor/dashboard.php");
             exit();
           }
-
+          else if($user->role == 3 && $user->status == 1){
+            $_SESSION['user_id']  = $user->id;
+            $_SESSION['name']     = $user->name;
+            $_SESSION['email']    = $user->email;
+            $_SESSION['phone']    = $user->phone;
+            $_SESSION['address']  = $user->address;
+            $_SESSION['password'] = $user->password;
+            $_SESSION['image']    = $user->image;
+            $_SESSION['role']     = $user->role;
+            $_SESSION['status']   = $user->status;
+            $_SESSION['join_date'] = $user->join_date;
+            
+            $_SESSION['message'] = "LOGIN SUCCESS";
+            $_SESSION['type'] = "success";
+            header("location: student/dashboard.php");
+            exit();
+          }
         }
       }
       else {

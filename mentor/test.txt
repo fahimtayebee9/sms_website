@@ -1,0 +1,119 @@
+<div class="col-md-12">
+                                                    <h5 class="font-weight-bold text-center">Curriculam Progress</h5>
+                                                    <?php
+                                                        $data_cur = array(
+                                                            'where' => array(
+                                                                'cur_id' => $crs_info->curriculam_id
+                                                            ),
+                                                            'return_type' => 'single'
+                                                        );
+                                                        $cur_info = $db->select('curriculams',$data_cur);
+                                                    ?>
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width: 10px">SL#</th>
+                                                                <th class="w-25">Task</th>
+                                                                <th>Progress</th>
+                                                                <th style="width: 40px">Label</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php
+                                                                $data_col = array(
+                                                                    'return_type' => 'count_col'
+                                                                );
+
+                                                                $count_col = $db->select('curriculams',$data_col);
+                                                                $session_count = ($count_col - 2);
+                                                                $cn = 0;
+                                                                $sl = 1;
+                                                                $session_elapsed = 0;
+                                                                while($cn < $session_count){
+                                                                    $cn++;
+                                                                    if($cn % 2 == 0){
+                                                                        ?>
+                                                                            <tr class="align-items-center">
+                                                                                <td class="font-weight-bold"><?=$sl?></td>
+                                                                                <td>
+                                                                                    <?php
+                                                                                        $col_no = ( $cn % 2 == 0 && $cn > 1 ) ?  $cn : 0;
+                                                                                        $col_data = null;
+                                                                                        if(isset($col_no) && $col_no != 0){
+                                                                                            $col_data = array(
+                                                                                                'return_type' => 'column',
+                                                                                                'col_no' => $col_no
+                                                                                            );
+                                                                                        }
+                                                                                        $col_res = $db->select('curriculams',$col_data);
+                                                                                        echo $col_res;
+                                                                                    ?>
+                                                                                </td>
+                                                                                <td style="vertical-align: middle;">
+                                                                                    <?php
+                                                                                        $col_no = ( $cn % 2 == 0 && $cn > 1 ) ? 1 + $cn : 0;
+                                                                                        $col_data = null;
+                                                                                        if(isset($col_no) && $col_no != 0){
+                                                                                            $col_data = array(
+                                                                                                'return_type' => 'column',
+                                                                                                'col_no' => $col_no
+                                                                                            );
+                                                                                        }
+                                                                                        $col_res = $db->select('curriculams',$col_data);
+                                                                                        $duration_session = str_replace($bangDATE, $engDATE, explode(' ', $col_res)[0]);
+                                                                                        $time_elasped = strtotime(date("y-m-d")) - strtotime($crs_info->cls_startDate);
+                                                                                        $month = $time_elasped / (60*60*24*30);
+
+                                                                                        $session_elapsed = ( $cn > 1 ) ? $session_elapsed + $duration_session : 0;
+                                                                                        $prev_total_session = ( $cn > 2 ) ? $session_elapsed - $duration_session : 0;
+                                                                                        $percentage = number_format( ( $month * 100 ),2);
+                                                                                        $prev_percent = ( $percentage > 100 ) ? $percentage - 100 : 0;
+                                                                                        $prev_next    = ( $prev_percent > 100 ) ? $prev_percent - 100 : 0;
+                                                                                        $zero_percent = ( $session_elapsed > $month && $prev_total_session < $month ) ? 0 : 0;
+                                                                                        if(($percentage > 100 && $cn == 2) || ($percentage > 200  && $cn == 4) || ($percentage > 300  && $cn == 6)){
+                                                                                            ?>      
+                                                                                                    <div class="progress progress-xs">
+                                                                                                        <div class="progress-bar progress-bar-danger" style="width: 100%"></div>
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td><span class="badge bg-info">100%</span></td>
+                                                                                            <?php
+                                                                                        }
+                                                                                        else if($prev_percent < 100 && $cn == 4){
+                                                                                            ?>
+                                                                                                    <div class="progress progress-xs">
+                                                                                                        <div class="progress-bar progress-bar-danger" style="width: <?=$prev_percent?>%"></div>
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td><span class="badge bg-info"><?=$prev_percent?>%</span></td>
+                                                                                            <?php
+                                                                                        }
+                                                                                        else if($prev_next < 100 && $prev_next > 0 && $cn == 6){
+                                                                                            ?>
+                                                                                                    <div class="progress progress-xs">
+                                                                                                        <div class="progress-bar progress-bar-danger" style="width: 100%"></div>
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td><span class="badge bg-info">100%</span></td>
+                                                                                            <?php
+                                                                                        }
+                                                                                        else{
+                                                                                            ?>
+                                                                                                    <div class="progress progress-xs">
+                                                                                                        <div class="progress-bar progress-bar-danger" style="width: <?=$zero_percent?>%"></div>
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td><span class="badge bg-info"><?=$zero_percent?>%</span></td>
+                                                                                            <?php
+                                                                                        }
+                                                                                    ?>
+                                                                                    
+                                                                            </tr>
+                                                                        <?php
+                                                                        $sl++;
+                                                                    }
+                                                                }
+                                                            ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
