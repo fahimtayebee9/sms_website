@@ -1,2 +1,0 @@
-// PREVENT COPYING
-onmousedown='return false;' onselectstart='return false;'
