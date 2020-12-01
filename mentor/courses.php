@@ -306,7 +306,7 @@
                                                                         $duration = str_replace($bangDATE, $engDATE, explode(' ', $crs_info->duration)[0]);
                                                                         $time_elasped = strtotime(date("y-m-d")) - strtotime($crs_info->cls_startDate);
                                                                         $month = $time_elasped / (60*60*24*30);
-                                                                        $percentage = number_format(( $month / $duration ) * 100 , 2);
+                                                                        $percentage = (number_format(( $month / $duration ) * 100 , 2) < 100 ) ? number_format(( $month / $duration ) * 100 , 2) : 100;
                                                                     ?>
                                                                     <div class="progress progress-xs" style="width: 80%!important;">
                                                                         <div class="progress-bar progress-bar-danger" style="width: <?=$percentage?>%"></div>
@@ -331,7 +331,7 @@
                                                     <table class="table table-striped">
                                                         <thead>
                                                             <tr>
-                                                                <th style="width: 10px">SL#</th>
+                                                                <th style="width: 2%">SL#</th>
                                                                 <th class="w-25">Task</th>
                                                                 <th class="w-25">Duration</th>
                                                                 <th width="48%">Progress</th>
@@ -345,9 +345,15 @@
 
                                                                 $count_col = $db->select('curriculams',$data_col);
                                                                 $session_count = ($count_col - 2);
+                                                                
                                                                 $cn = 0;
                                                                 $sl = 1;
+                                                                $counter_sl = 0;
                                                                 $session_elapsed = 0;
+
+                                                                $time_elaspedSub = strtotime(date("Y-m-d")) - strtotime($crs_info->cls_startDate);
+                                                                $month_passed    = (int)$time_elaspedSub / (60*60*24*30);
+
                                                                 while($cn < $session_count){
                                                                     $cn++;
                                                                     if($cn % 2 == 0){
@@ -379,14 +385,33 @@
                                                                                             );
                                                                                         }
                                                                                         $col_res = $db->select('curriculams',$col_data);
-                                                                                        echo $col_res;
+                                                                                        echo str_replace($engDATE, $bangDATE, $col_res) . " মাস";
                                                                                     ?>
                                                                                 </td>
-                                                                                <td>
-                                                                                    
+                                                                                <td class="d-flex justify-content-between align-items-center">
+                                                                                    <?php
+                                                                                        $session_elapsed += $col_res;
+                                                                                        $new_cn = $cn - floor($month_passed);
+                                                                                        $new_dis = (($month_passed - $session_elapsed) > 1 ) ? $month_passed - $session_elapsed : $month_passed - floor($month_passed);
+
+                                                                                        $chk_sl = ($counter_sl > 0 ) ? $counter_sl - 2 : 0;
+
+                                                                                        if(floor($month_passed) >= $session_elapsed){
+                                                                                            ?>
+                                                                                                <div class="progress progress-xs" style="width: 85%!important;">
+                                                                                                    <div class="progress-bar progress-bar-danger" style="width: 100%"></div>
+                                                                                                </div>
+                                                                                                <span class="badge badge-success">100%</span>
+                                                                                            <?php
+                                                                                        }
+                                                                                        else{
+                                                                                            echo "Session Not Started Yet";
+                                                                                        }
+                                                                                    ?>
                                                                                 </td>
                                                                             </tr>
                                                                         <?php
+                                                                        $counter_sl += 2;
                                                                         $sl++;
                                                                     }
                                                                 }
